@@ -1,0 +1,7 @@
+dotnet aspnet-codegenerator controller -name ProfileController -api -m Profile -dc DatabaseContext -outDir Controllers
+
+dotnet aspnet-codegenerator controller -name WorkoutController -api -m Workout -dc DatabaseContext -outDir Controllers
+
+dotnet aspnet-codegenerator controller -name ExerciseController -api -m Exercise -dc DatabaseContext -outDir Controllers
+
+dotnet aspnet-codegenerator controller -name SearchController -api -m Search -dc DatabaseContext -outDir Controllers
