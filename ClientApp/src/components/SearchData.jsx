@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-//import Autocomplete from 'react-autocomplete'
-import Suggestions from './Suggestions'
+import Autocomplete from 'react-autocomplete'
 
 export class SearchData extends Component {
   state = {
     query: '',
+    value: '',
+    searchTerm: '',
     results: []
   }
 
@@ -15,29 +16,41 @@ export class SearchData extends Component {
       console.log(resp.data)
     })
   }
-  inputQueryHandler = () => {
-    this.setState(
-      {
-        query: this.search.value
-      },
-      () => {
-        if (this.state.query && this.state.query.length > 1) {
-          if (this.state.query.length % 2 === 0) {
-            this.getExercise()
-          }
-        }
-      }
-    )
+  getExercisesForAutoComplete(value, callback) {
+    axios.get(`/api/search/exercises?=${value}`).then(resp => {
+      callback(resp.data)
+    })
   }
   render() {
     return (
       <form>
-        <input
-          placeholder="Search for...."
-          ref={input => (this.search = input)}
-          onChange={this.inputQueryHandler}
+        <Autocomplete
+          value={this.state.value}
+          items={this.state.results}
+          getItemValue={item => item.name}
+          onSelect={value => this.setState({ value })}
+          onChange={(event, value) => {
+            this.setState({ value })
+            clearTimeout(this.requestTimer)
+            console.log({ value })
+            this.requestTimer = this.getExercisesForAutoComplete(
+              value,
+              searchResults => {
+                console.log('cb', { searchResults })
+                this.setState({ results: searchResults })
+              }
+            )
+          }}
+          renderMenu={children => <div className="menu">{children}</div>}
+          renderItem={(item, isHighlighted) => (
+            <div
+              className={`item ${isHighlighted ? 'item-highlighted' : ''}`}
+              key={item.id}
+            >
+              {item.name}
+            </div>
+          )}
         />
-        <Suggestions results={this.state.results} />
       </form>
     )
   }

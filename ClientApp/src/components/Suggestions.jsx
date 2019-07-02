@@ -6,11 +6,21 @@ const Suggestions = props => {
     return <option value={r.value}>{r.name}</option>
   })
   return (
-    <ul>
-      <Autocomplete value={this.state.value} input>
-        {choices}
-      </Autocomplete>
-    </ul>
+    <li>
+      <Autocomplete
+        items={choices}
+        value={this.prop.value}
+        getItemValue={item => item.name}
+        renderItem={(item, isHighlighted) => (
+          <div
+            className={`item ${isHighlighted ? 'item-highlighted' : ''}`}
+            key={item.id}
+          >
+            {item.name}
+          </div>
+        )}
+      />
+    </li>
   )
 }
 

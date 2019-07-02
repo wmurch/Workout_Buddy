@@ -5,3 +5,61 @@ dotnet aspnet-codegenerator controller -name WorkoutController -api -m Workout -
 dotnet aspnet-codegenerator controller -name ExerciseController -api -m Exercise -dc DatabaseContext -outDir Controllers
 
 dotnet aspnet-codegenerator controller -name SearchController -api -m Search -dc DatabaseContext -outDir Controllers
+
+// inputQueryHandler = () => {
+  //   this.setState(
+  //     {
+  //       query: this.search.value
+  //     },
+  //     () => {
+  //       if (this.state.query && this.state.query.length > 1) {
+  //         if (this.state.query.length % 2 === 0) {
+  //           this.getExercise()
+  //         }
+  //       }
+  //     }
+  //   )
+  // }
+  {/* <input
+          placeholder="Search for...."
+          ref={input => (this.search = input)}
+          onChange={this.inputQueryHandler}
+        /> */}
+        {/* <Autocomplete
+          items={[
+            { id: 'foo', name: 'foodddddd' },
+            { id: 'bar', name: 'bar' },
+            { id: 'baz', name: 'baz' }
+          ]}
+          shouldItemRender={(item, value) =>
+            item.name.toLowerCase().indexOf(value.toLowerCase()) > -1
+          }
+          getItemValue={item => item.name}
+          renderItem={(item, highlighted) => (
+            <div
+              key={item.id}
+              style={{ backgroundColor: highlighted ? '#eee' : 'transparent' }}
+            >
+              {item.name}
+            </div>
+          )}
+          value={this.state.value}
+          onChange={e => this.setState({ value: e.target.value })}
+          onSelect={value => {
+            console.log({ value })
+            this.setState({ value })
+          }}
+        />
+        <Autocomplete
+          items={this.state.results}
+          getItemValue={item => (this.search = item)}
+          onChange={this.inputQueryHandler}
+          renderItem={(item, isHighlighted) => (
+            <div
+              className={`item ${isHighlighted ? 'item-highlighted' : ''}`}
+              key={item.id}
+            >
+              {item.name}
+            </div>
+          )}
+        /> */}
