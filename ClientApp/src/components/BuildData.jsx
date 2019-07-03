@@ -1,47 +1,62 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import Autocomplete from 'react-autocomplete'
 
 export class BuildData extends Component {
   static displayName = BuildData.name
 
   state = {
+    workout: {},
+    value: '',
     workouts: [],
-    workout: {}
+    exercises: []
   }
   componentDidMount() {
     axios.get('/api/workout').then(resp => {
       this.setState({ workouts: resp.data })
     })
   }
-  buildQueryResults() {
+  buildQueryResults = async e => {
     console.log('This item is logging')
   }
 
-  addWorkout() {
-    axios.post('/api/workout', this.state.workout).then(resp => {
-      this.setState({
-        workouts: this.state.workouts.concat(this.state.workout)
+  addWorkout = async e => {
+    e.preventDefault()
+    axios
+      .post('/api/workout', this.state.workout)
+      .then(resp => {
+        this.setState({
+          workouts: this.state.workouts.concat(this.state.workout)
+        })
       })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+  getExercisesForAutoComplete(value, callback) {
+    axios.get(`/api/search/exercises?=${value}`).then(resp => {
+      callback(resp.data)
     })
   }
-  updateValue = e => {
+  updateValue = async e => {
     const state = this.state
     state.workout[e.target.name] = e.target.value
     this.setState(state)
   }
-
   render() {
     return (
-      <div>
+      <form onSubmit={this.addWorkout}>
         <h1>Build Your Workout</h1>
         <p>Search for an exercise for your workout</p>
-        <form onSubmit={this.addWorkout}>
+        {
           <input
             type="text"
             placeholder="Name your workout"
             name="Name"
             onChange={this.updateValue}
           />
+        }
+        {
           <table>
             <tbody>
               <tr>
@@ -52,11 +67,47 @@ export class BuildData extends Component {
               </tr>
               <tr>
                 <td>
-                  <input
-                    type="text"
+                  {/*  <input
+                    className="exerciseId"
+                    type="number"
                     placeholder="Name of exercise"
-                    name="Exercise"
+                    name="ExerciseId"
                     onChange={this.updateValue}
+                  /> */}
+                  <Autocomplete
+                    inputProps={{ id: 'exerciseId' }}
+                    value={this.state.value}
+                    items={this.state.exercises}
+                    getItemValue={item => item.name}
+                    onSelect={value => {
+                      console.log(value)
+                      this.setState({ value })
+                    }}
+                    onChange={(event, value) => {
+                      this.setState({ value })
+                      clearTimeout(this.requestTimer)
+                      console.log({ value })
+                      this.requestTimer = this.getExercisesForAutoComplete(
+                        value,
+                        searchResults => {
+                          /* console.log('cb', { searchResults }) */
+                          this.setState({ exercises: searchResults })
+                        }
+                      )
+                    }}
+                    renderMenu={children => (
+                      <div className="menu">{children}</div>
+                    )}
+                    renderItem={(item, isHighlighted) => (
+                      <div
+                        className={`item ${
+                          isHighlighted ? 'item-highlighted' : ''
+                        }`}
+                        key={item.id}
+                      >
+                        {item.name}
+                      </div>
+                    )}
                   />
                 </td>
                 <td>
@@ -86,9 +137,9 @@ export class BuildData extends Component {
               </tr>
             </tbody>
           </table>
-          <button className="submitButton">Submit Workout</button>
-        </form>
-      </div>
+        }
+        <button className="submitButton">Submit Workout</button>
+      </form>
     )
   }
 }

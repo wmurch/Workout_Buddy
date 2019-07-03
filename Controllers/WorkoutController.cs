@@ -74,9 +74,21 @@ namespace Workout_Buddy.Controllers
 
         // POST: api/Workout
         [HttpPost]
-        public async Task<ActionResult<Workout>> PostWorkout(Workout workout)
+        public async Task<ActionResult<Workout>> PostWorkout([FromBody]Workout workout, [FromQuery]string exName)
         {
-            _context.Workouts.Add(workout);
+            var exercise = _context.Exercises.FirstOrDefault(e => e.Name == exName);
+            if (exercise == null)
+            {
+                exercise = new Exercise
+                {
+                    Name = exName
+                };
+
+             _context.Exercises.Add(exercise);
+            await _context.SaveChangesAsync();
+            }
+
+            exercise.Workouts.Add(workout);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetWorkout", new { id = workout.Id }, workout);
