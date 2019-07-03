@@ -23,7 +23,10 @@ export class BuildData extends Component {
   addWorkout = async e => {
     e.preventDefault()
     axios
-      .post('/api/workout', this.state.workout)
+      .post('/api/workout', {
+        ...this.state.workout,
+        exerciseId: this.state.selectedExercise.id
+      })
       .then(resp => {
         this.setState({
           workouts: this.state.workouts.concat(this.state.workout)
@@ -79,9 +82,9 @@ export class BuildData extends Component {
                     value={this.state.value}
                     items={this.state.exercises}
                     getItemValue={item => item.name}
-                    onSelect={value => {
-                      console.log(value)
-                      this.setState({ value })
+                    onSelect={(value, exercise) => {
+                      console.log({ value })
+                      this.setState({ value, selectedExercise: exercise })
                     }}
                     onChange={(event, value) => {
                       this.setState({ value })
