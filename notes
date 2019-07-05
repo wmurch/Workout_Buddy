@@ -63,3 +63,77 @@ dotnet aspnet-codegenerator controller -name SearchController -api -m Search -dc
             </div>
           )}
         /> */}
+
+        <table>
+          <tbody>
+            <tr>
+              <th>Exercise</th>
+              <th>Sets</th>
+              <th>Reps</th>
+              <th>Weight</th>
+            </tr>
+            <tr>
+              <td>
+                <Autocomplete
+                  inputProps={{ id: 'exerciseId' }}
+                  value={this.state.value}
+                  items={this.state.exercises}
+                  getItemValue={item => item.name}
+                  onSelect={(value, exercise) => {
+                    console.log({ value })
+                    this.setState({ value, selectedExercise: exercise })
+                  }}
+                  onChange={(event, value) => {
+                    this.setState({ value })
+                    clearTimeout(this.requestTimer)
+                    console.log({ value })
+                    this.requestTimer = this.getExercisesForAutoComplete(
+                      value,
+                      searchResults => {
+                        console.log('cb', { searchResults })
+                        this.setState({ exercises: searchResults })
+                      }
+                    )
+                  }}
+                  renderMenu={children => (
+                    <div className="menu">{children}</div>
+                  )}
+                  renderItem={(item, isHighlighted) => (
+                    <div
+                      className={`item ${
+                        isHighlighted ? 'item-highlighted' : ''
+                      }`}
+                      key={item.id}
+                    >
+                      {item.name}
+                    </div>
+                  )}
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  placeholder="Sets"
+                  name="Sets"
+                  onChange={this.updateValue}
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  placeholder="Reps"
+                  name="Reps"
+                  onChange={this.updateValue}
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  placeholder="Weight"
+                  name="Weight"
+                  onChange={this.updateValue}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
