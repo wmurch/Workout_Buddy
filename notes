@@ -6,134 +6,91 @@ dotnet aspnet-codegenerator controller -name ExerciseController -api -m Exercise
 
 dotnet aspnet-codegenerator controller -name SearchController -api -m Search -dc DatabaseContext -outDir Controllers
 
-// inputQueryHandler = () => {
-  //   this.setState(
-  //     {
-  //       query: this.search.value
-  //     },
-  //     () => {
-  //       if (this.state.query && this.state.query.length > 1) {
-  //         if (this.state.query.length % 2 === 0) {
-  //           this.getExercise()
-  //         }
-  //       }
-  //     }
-  //   )
-  // }
-  {/* <input
-          placeholder="Search for...."
-          ref={input => (this.search = input)}
-          onChange={this.inputQueryHandler}
-        /> */}
-        {/* <Autocomplete
-          items={[
-            { id: 'foo', name: 'foodddddd' },
-            { id: 'bar', name: 'bar' },
-            { id: 'baz', name: 'baz' }
-          ]}
-          shouldItemRender={(item, value) =>
-            item.name.toLowerCase().indexOf(value.toLowerCase()) > -1
-          }
-          getItemValue={item => item.name}
-          renderItem={(item, highlighted) => (
-            <div
-              key={item.id}
-              style={{ backgroundColor: highlighted ? '#eee' : 'transparent' }}
-            >
-              {item.name}
-            </div>
-          )}
-          value={this.state.value}
-          onChange={e => this.setState({ value: e.target.value })}
-          onSelect={value => {
-            console.log({ value })
-            this.setState({ value })
-          }}
-        />
-        <Autocomplete
-          items={this.state.results}
-          getItemValue={item => (this.search = item)}
-          onChange={this.inputQueryHandler}
-          renderItem={(item, isHighlighted) => (
-            <div
-              className={`item ${isHighlighted ? 'item-highlighted' : ''}`}
-              key={item.id}
-            >
-              {item.name}
-            </div>
-          )}
-        /> */}
-
-        <table>
-          <tbody>
-            <tr>
-              <th>Exercise</th>
-              <th>Sets</th>
-              <th>Reps</th>
-              <th>Weight</th>
-            </tr>
-            <tr>
-              <td>
-                <Autocomplete
-                  inputProps={{ id: 'exerciseId' }}
-                  value={this.state.value}
-                  items={this.state.exercises}
-                  getItemValue={item => item.name}
-                  onSelect={(value, exercise) => {
-                    console.log({ value })
-                    this.setState({ value, selectedExercise: exercise })
-                  }}
-                  onChange={(event, value) => {
-                    this.setState({ value })
-                    clearTimeout(this.requestTimer)
-                    console.log({ value })
-                    this.requestTimer = this.getExercisesForAutoComplete(
-                      value,
-                      searchResults => {
-                        console.log('cb', { searchResults })
-                        this.setState({ exercises: searchResults })
-                      }
-                    )
-                  }}
-                  renderMenu={children => (
-                    <div className="menu">{children}</div>
-                  )}
-                  renderItem={(item, isHighlighted) => (
-                    <div
-                      className={`item ${
-                        isHighlighted ? 'item-highlighted' : ''
-                      }`}
-                      key={item.id}
-                    >
-                      {item.name}
-                    </div>
-                  )}
-                />
-              </td>
-              <td>
-                <input
-                  type="number"
-                  placeholder="Sets"
-                  name="Sets"
-                  onChange={this.updateValue}
-                />
-              </td>
-              <td>
-                <input
-                  type="number"
-                  placeholder="Reps"
-                  name="Reps"
-                  onChange={this.updateValue}
-                />
-              </td>
-              <td>
-                <input
-                  type="number"
-                  placeholder="Weight"
-                  name="Weight"
-                  onChange={this.updateValue}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+ {
+        "id": 1,
+        "name": "Bench Press",
+        "bodyPart": "Chest",
+        "description": "exercise builds chest and arms",
+        "workoutId": null,
+        "workout": null
+    },
+    {
+        "id": 2,
+        "name": "Pullups",
+        "bodyPart": "Back",
+        "description": "exercise builds upper back and arms",
+        "workoutId": null,
+        "workout": null
+    },
+    {
+        "id": 3,
+        "name": "Squat",
+        "bodyPart": "Legs",
+        "description": "exercise builds lower back and legs",
+        "workoutId": null,
+        "workout": null
+    },
+    {
+        "id": 4,
+        "name": "Situps",
+        "bodyPart": "Abdominals",
+        "description": "exercise builds midsection strength",
+        "workoutId": null,
+        "workout": null
+    },
+    {
+        "id": 5,
+        "name": "Military Press",
+        "bodyPart": "Shoulders",
+        "description": "exercise builds shoulders and arms",
+        "workoutId": null,
+        "workout": null
+    },
+    {
+        "id": 6,
+        "name": "Bent Over Row",
+        "bodyPart": "Upper Back",
+        "description": "exercise builds uppoer back and arms",
+        "workoutId": null,
+        "workout": null
+    },
+    {
+        "id": 7,
+        "name": "Front Squat",
+        "bodyPart": "Legs",
+        "description": "exercise builds legs",
+        "workoutId": null,
+        "workout": null
+    },
+    {
+        "id": 8,
+        "name": "Deadlift",
+        "bodyPart": "Lower Back",
+        "description": "exercise builds lower back and legs",
+        "workoutId": null,
+        "workout": null
+    },
+    {
+        "id": 9,
+        "name": "Calf Raises",
+        "bodyPart": "Calves",
+        "description": "exercise builds lower legs",
+        "workoutId": null,
+        "workout": null
+    },
+    {
+        "id": 10,
+        "name": "Incline Bench",
+        "bodyPart": "Chest",
+        "description": "exercise builds chest and arms",
+        "workoutId": null,
+        "workout": null
+    },
+    {
+        "id": 11,
+        "name": null,
+        "bodyPart": null,
+        "description": null,
+        "workoutId": null,
+        "workout": null
+    }

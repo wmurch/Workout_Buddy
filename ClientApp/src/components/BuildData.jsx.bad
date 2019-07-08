@@ -1,0 +1,188 @@
+import React, { Component } from 'react'
+import axios from 'axios'
+
+export class BuildData extends Component {
+  state = {
+    formState: {
+      id: '',
+      exerciseId: 0,
+      sets: 0,
+      reps: 0,
+      mode: 'submit'
+    },
+    workout: [],
+    workouts: [],
+    exercises: []
+  }
+
+  resetFormState = () => {
+    this.setState({
+      formState: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        mode: 'submit',
+        id: ''
+      }
+    })
+  }
+
+  onChange = event => {
+    this.setState({
+      formState: {
+        ...this.state.formState,
+        [event.target.name]: event.target.value
+      }
+    })
+    console.log(this.state.formState)
+  }
+
+  onSubmit = event => {
+    const { exercises, formState } = this.state
+    event.preventDefault()
+    const exerciseId = event.target.querySelector("input[name='exerciseId']")
+      .value
+    const reps = event.target.querySelector("input[name='reps']").value
+    const sets = event.target.querySelector("input[name='sets']").value
+    if (formState.mode === 'submit') {
+      this.setState({
+        exercises: [
+          ...this.state.exercises,
+          {
+            exerciseId,
+            sets,
+            reps,
+            updating: false,
+            id: this.state.exercises[this.state.exercises.length - 1].id + 1
+          }
+        ]
+      })
+    } else if (formState.mode === 'edit') {
+      const index = exercises.find(exercise => exercise.id === formState.id).id
+      exercises[index] = {
+        exerciseId,
+        sets,
+        reps,
+        updating: false,
+        id: exercises[index].id
+      }
+      this.setState({
+        exercises: [...exercises]
+      })
+    }
+
+    this.resetFormState()
+  }
+  componentDidMount() {
+    axios.get('/api/workout').then(resp => {
+      this.setState({ exercises: resp.data })
+    })
+  }
+  updateExercise = key => {
+    let { workout } = this.state
+    workout[key].updating = true
+    axios
+      .post('/api/workout', {
+        ...this.state.workout
+        /*  exerciseId: this.state.selectedExercise.id */
+      })
+      .then(resp => {
+        this.setState({
+          formState: { ...this.state.workout[key], mode: 'edit' }
+        })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  deleteExercise = key => {
+    let { exercises } = this.state
+    exercises.splice(key, 1)
+    this.setState({
+      exercises: [...exercises]
+    })
+  }
+
+  render() {
+    const { exercises, formState } = this.state
+    return (
+      <div>
+        <Form
+          formState={formState}
+          onChange={this.onChange}
+          onSubmit={this.onSubmit}
+        />
+        <Table
+          exercises={exercises}
+          updateExercise={this.updateExercise}
+          deleteExercise={this.deleteExercise}
+        />
+      </div>
+    )
+  }
+}
+
+const Table = ({ exercises = [], updateExercise, deleteExercise }) => {
+  return (
+    <div className="table">
+      <div className="table-header">
+        <div className="row">
+          <div className="column">Exercise</div>
+          <div className="column">Sets</div>
+          <div className="column">Reps</div>
+          <div className="column">Options</div>
+        </div>
+      </div>
+      <div className="table-body">
+        {exercises.map((exercise, key) => {
+          return (
+            <div className={`row ${exercise.updating ? 'updating' : ''}`}>
+              <div className="column">{exercise.Exercise}</div>
+              <div className="column">{exercise.Sets}</div>
+              <div className="column">{exercise.Reps}</div>
+              <div className="column">
+                <button className="icon" onClick={() => updateExercise(key)}>
+                  <i class="far fa-edit" />
+                </button>
+                <button className="icon">
+                  <i
+                    class="fas fa-exercise-minus"
+                    onClick={() => deleteExercise(key)}
+                  />
+                </button>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+const Field = ({ label = '', name = '', value = '', onChange }) => {
+  return (
+    <div className="field">
+      <label htmlFor={name}>{label}</label>
+      <input type="text" name={name} value={value} onChange={onChange} />
+    </div>
+  )
+}
+
+const Form = ({ formState, onChange, onSubmit }) => {
+  return (
+    <form className="form" onSubmit={onSubmit}>
+      <fieldset>
+        <Field
+          type="number"
+          label="Exercise"
+          name="exerciseId"
+          onChange={onChange}
+        />
+        <Field type="number" label="Sets" name="sets" onChange={onChange} />
+        <Field type="number" label="Reps" name="reps" onChange={onChange} />
+      </fieldset>
+      <button>{formState.mode}</button>
+    </form>
+  )
+}

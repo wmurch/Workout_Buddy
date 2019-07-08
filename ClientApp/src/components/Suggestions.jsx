@@ -1,27 +1,15 @@
 import React from 'react'
-import Autocomplete from 'react-autocomplete'
 
 const Suggestions = props => {
-  const choices = props.results.map(r => {
-    return <option value={r.value}>{r.name}</option>
-  })
-  return (
-    <li>
-      <Autocomplete
-        items={choices}
-        value={this.prop.value}
-        getItemValue={item => item.name}
-        renderItem={(item, isHighlighted) => (
-          <div
-            className={`item ${isHighlighted ? 'item-highlighted' : ''}`}
-            key={item.id}
-          >
-            {item.name}
-          </div>
-        )}
-      />
+  const options = props.results.map(r => (
+    <li key={r.id}>
+      {`Workout Name: ${r.name}`}
+      {`Exercise: ${r.name}`}
+      {`Sets: ${r.sets}`}
+      {`Reps: ${r.reps}`}
     </li>
-  )
+  ))
+  return <ul>{options}</ul>
 }
 
 export default Suggestions

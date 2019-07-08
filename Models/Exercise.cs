@@ -8,6 +8,7 @@ namespace Workout_Buddy.Models
         public string BodyPart { get; set; }
         public string Description { get; set; }
 
-        public List<Workout> Workouts { get; set; } = new List<Workout>();
+        public int? WorkoutId { get; set; }
+        public Workout Workout { get; set; }
     }
 }

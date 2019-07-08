@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import Autocomplete from 'react-autocomplete'
 import axios from 'axios'
+this.state = {
+  exercise: {},
+  exercises: []
+}
 
 class DataTable extends Component {
-  state = {
-    value: '',
-    exercises: []
-  }
   getExercisesForAutoComplete(value, callback) {
     axios.get(`/api/search/exercises?=${value}`).then(resp => {
       callback(resp.data)
@@ -22,11 +22,12 @@ class DataTable extends Component {
         <td>
           <Autocomplete
             inputProps={{ id: 'exerciseId' }}
-            value={this.state.value}
-            items={this.state.exercises}
+            value={this.props.value}
+            items={this.props.exercises}
             getItemValue={item => item.name}
             onSelect={(value, exercise) => {
               console.log({ value })
+              /* this.props.addExerciseState(this.state.selectedExercise) */
               this.setState({ value, selectedExercise: exercise })
             }}
             onChange={(event, value) => {

@@ -12,7 +12,7 @@ namespace Workout_Buddy.Models
 
         public string Goal { get; set; }
 
-        public List<Exercise> Exercises { get; set; } = new List<Exercise>();
+        public List<Workout> Workouts { get; set; } = new List<Workout>();
 
     }
 }

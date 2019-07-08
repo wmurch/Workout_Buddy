@@ -23,14 +23,16 @@ namespace Workout_Buddy.Controllers
 
         // GET: api/Workout
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Workout>>> GetWorkouts()
+        public async Task<ActionResult<IEnumerable<Exercise>>> GetWorkouts([FromQuery]int id)
         {
-            return await _context.Workouts.ToListAsync();
+            var rv = _context.Exercises.Where(w => w.WorkoutId == id);
+
+            return await rv.ToListAsync();
         }
 
         // GET: api/Workout/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Workout>> GetWorkout(int id)
+        /* [HttpGet("{id}")]
+        public async Task<ActionResult<Workout>> GetProfile(int id)
         {
             var workout = await _context.Workouts.FindAsync(id);
 
@@ -40,8 +42,14 @@ namespace Workout_Buddy.Controllers
             }
 
             return workout;
-        }
-
+        } */
+        /* [HttpGet("workout")]
+       public async Task<List<Workout>> SearchWorkout([FromQuery] string searchTerm)
+       {
+           var results = _context.Workouts.Where(w => w.Name.ToLower().Contains(searchTerm.ToLower()));
+           return await results.ToAsyncList();
+       }
+*/
         // PUT: api/Workout/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutWorkout(int id, Workout workout)

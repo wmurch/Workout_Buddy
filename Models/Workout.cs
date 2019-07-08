@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Workout_Buddy.Models
 {
     public class Workout
@@ -11,7 +13,7 @@ namespace Workout_Buddy.Models
         public int? ProfileId { get; set; }
         public Profile Profile { get; set; }
 
-        public int? ExerciseId { get; set; }
-        public Exercise Exercise { get; set; }
+        public List<Exercise> Exercises { get; set; } = new List<Exercise>();
+
     }
 }
