@@ -20,9 +20,15 @@ namespace Workout_Buddy.Controllers
         {
             _context = context;
         }
+        // GET: api/Exercise
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Workout>>> GetWorkouts()
+        {
+            return await _context.Workouts.ToListAsync();
+        }
 
         // GET: api/Workout
-        [HttpGet]
+        [HttpGet("exercises")]
         public async Task<ActionResult<IEnumerable<Exercise>>> GetWorkouts([FromQuery]int id)
         {
             var rv = _context.Exercises.Where(w => w.WorkoutId == id);

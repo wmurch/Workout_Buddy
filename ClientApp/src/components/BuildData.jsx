@@ -24,6 +24,10 @@ export class BuildData extends Component {
     axios.get('/api/workout').then(resp => {
       this.setState({ workouts: resp.data })
     })
+    var auth = localStorage.getItem('auth') === 'true'
+    var profile = auth ? localStorage.getItem('profile') : ''
+    this.setState({ auth, profile })
+    console.log({ auth, profile })
   }
   /*  addExerciseState = exercise => {
     this.state.exercises.push(exercise)
@@ -47,7 +51,7 @@ export class BuildData extends Component {
       })
   }
   getWorkout = () => {
-    axios.get(`/api/workout/workout?=${this.state.query}`).then(resp => {
+    axios.get(`/api/workout/workout?id=${this.state.query}`).then(resp => {
       this.setState({ results: resp.data })
       console.log(resp.data)
     })

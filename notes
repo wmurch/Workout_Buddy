@@ -6,6 +6,8 @@ dotnet aspnet-codegenerator controller -name ExerciseController -api -m Exercise
 
 dotnet aspnet-codegenerator controller -name SearchController -api -m Search -dc DatabaseContext -outDir Controllers
 
+dotnet aspnet-codegenerator controller -name AuthController -api -m Auth -dc DatabaseContext -outDir Controllers
+
  {
         "id": 1,
         "name": "Bench Press",

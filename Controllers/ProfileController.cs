@@ -23,9 +23,15 @@ namespace Workout_Buddy.Controllers
 
         // GET: api/Profile
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Profile>>> GetProfile()
+        public async Task<ActionResult<Profile>> GetProfile([FromQuery] string email)
         {
-            return await _context.Profile.ToListAsync();
+            var profile = _context.Profile.FirstOrDefault(w => w.Email == email);
+            if (profile == null)
+            {
+                return NotFound();
+            }
+
+            return profile;
         }
 
         // GET: api/Profile/5
@@ -81,6 +87,7 @@ namespace Workout_Buddy.Controllers
 
             return CreatedAtAction("GetProfile", new { id = profile.Id }, profile);
         }
+
 
         // DELETE: api/Profile/5
         [HttpDelete("{id}")]

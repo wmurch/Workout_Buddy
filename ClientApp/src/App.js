@@ -1,20 +1,28 @@
 import React, { Component } from 'react'
+import { Switch } from 'react-router-dom'
 import { Route } from 'react-router'
 import { Layout } from './components/Layout'
 import { Home } from './pages/Home.jsx'
 import { Search } from './pages/Search'
+import Login from './pages/Login'
 import { Build } from './pages/Build'
+import { Register } from './components/Register'
+import Profile from './pages/Profile'
+/* import ProtectedRoute from './components/ProtectedRoute' */
 
 export default class App extends Component {
-  static displayName = App.name
-
+  static displayName = 'Fit Trax'
   render() {
     return (
       <Layout>
-        <Route exact path="/" component={Home} />
-        <Route path="/build" component={Build} />
-        <Route path="/search" component={Search} />
-        <Route path="/search/exercise?={id}" component={Search} />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
+          <Route path="/build" component={Build} />
+          <Route path="/search" component={Search} />
+          <Route path="/profile" component={Profile} />
+        </Switch>
       </Layout>
     )
   }

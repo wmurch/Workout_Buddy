@@ -38,7 +38,7 @@ export class NavMenu extends Component {
         >
           <Container>
             <NavbarBrand tag={Link} to="/">
-              Workout Buddy
+              Fit Trax
             </NavbarBrand>
             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
             <Collapse
@@ -53,13 +53,13 @@ export class NavMenu extends Component {
                   </NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/build">
-                    Build
+                  <NavLink tag={Link} className="text-dark" to="/login">
+                    Login
                   </NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/search">
-                    Search
+                  <NavLink tag={Link} className="text-dark" to="/register">
+                    Register
                   </NavLink>
                 </NavItem>
               </ul>
