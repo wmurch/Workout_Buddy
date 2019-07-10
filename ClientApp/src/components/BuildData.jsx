@@ -9,42 +9,28 @@ export class BuildData extends Component {
   static displayName = BuildData.name
   state = {
     query: '',
-    profileId: '',
+    workoutId: '',
     searchTerm: '',
+    workoutDisabled: false,
+    exerciseDisabled: true,
     workout: [],
     value: '',
     exercises: [],
     items: [],
     selectedExercise: {},
     workouts: [],
-    isSubmitting: false,
+
     results: []
   }
 
   componentDidMount() {
-    /* var input = JSON.parse(window.localStorage.getItem('profile'))
-    this.setState({ profileId: input[0].id }) */
+    var input = JSON.parse(window.localStorage.getItem('workout'))
+    this.setState({ workout: input[0].name, workoutId: input[0].id })
     axios.get('/api/workout').then(resp => {
       this.setState({ workouts: resp.data })
     })
   }
-  /*  addExerciseState = exercise => {
-    this.state.exercises.push(exercise)
-    this.setState({ exercises: this.state.exercises })
-  }
- */
-  createWorkout = ({ serialized, fields, form }) => {
-    return axios
-      .post('/api/workout', {
-        ...this.state.workout
-      })
-      .then(resp => {
-        this.setState({
-          workout: this.state.workout.concat(this.state.workout)
-        })
-        console.log(this.state.workout)
-      })
-  }
+
   addExercise = ({ serialized, fields, form }) => {
     return axios
       .post('/api/workout', {
@@ -74,21 +60,6 @@ export class BuildData extends Component {
     })
   }
 
-  handleSubmitStart = () => {
-    this.setState({ isSubmitting: true })
-  }
-  handleWorkoutSubmit = () => {
-    this.setState({ isSubmitting: true })
-  }
-
-  updateWorkoutValue = async e => {
-    var input = JSON.parse(window.localStorage.getItem('profile'))
-    const state = this.state
-    state.workout.profileId = input[0].id
-    state.workout[e.target.name] = e.target.value
-    this.setState(state)
-    console.log(state)
-  }
   updateExerciseValue = async e => {
     const state = this.state
     state.exercise[e.target.name] = e.target.value
@@ -96,38 +67,21 @@ export class BuildData extends Component {
     console.log(state)
   }
   render() {
-    const { isSubmitting } = this.state
     return (
       <div>
-        <Form
-          action={this.createWorkout}
-          onSubmitStart={this.handleWorkoutSubmit}
-        >
-          <Field.Group name="workout">
-            <h1>Build Your Workout</h1>
-            <p>Search for an exercise for your workout</p>
-            <label>
-              Workout Name
-              <input
-                type="text"
-                name="Name"
-                ref={input => (this.search = input)}
-                onChange={this.updateWorkoutValue}
-              />
-              <Button type="submitWorkout">Create New Workout</Button>
-              {isSubmitting && <span id="submitting">Submitting...</span>}
-            </label>
-          </Field.Group>
-        </Form>
         <Form
           action={this.createExercise}
           onSubmitStart={this.handleExerciseSubmit}
         >
           <Field.Group name="body">
+            <h1>Welcome to the {this.state.workout} Page</h1>
             <label>
               Exercise
               <Autocomplete
-                inputProps={{ id: 'exerciseId' }}
+                inputProps={{
+                  id: 'exerciseId',
+                  ...this.state.exerciseDisabled
+                }}
                 value={this.state.value}
                 items={this.state.exercises}
                 getItemValue={item => item.name}
@@ -164,6 +118,7 @@ export class BuildData extends Component {
               Sets
               <input
                 type="number"
+                label="Sets"
                 name="Sets"
                 onChange={this.updateExerciseValue}
               />
@@ -176,9 +131,14 @@ export class BuildData extends Component {
                 name="Rep"
                 onChange={this.updateExerciseValue}
               />
+              <input
+                type="number"
+                label="Weight"
+                name="Weight"
+                onChange={this.updateExerciseValue}
+              />
             </label>
             <Button type="submitExercise">Add Exercise</Button>
-            {isSubmitting && <span id="submitting">Submitting...</span>}
           </Field.Group>
           <Field.Group name="table">
             <ul>
