@@ -5,6 +5,9 @@ namespace Workout_Buddy.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int Sets { get; set; }
+        public int Rep { get; set; }
+        public int Weight { get; set; }
         public string BodyPart { get; set; }
         public string Description { get; set; }
 

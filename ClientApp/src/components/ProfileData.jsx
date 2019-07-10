@@ -1,21 +1,34 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { Form, Field } from 'react-advanced-form'
+import { Link } from 'react-router-dom'
 
 class ProfileData extends Component {
+  state = {
+    workouts: [],
+    errorMessage: null,
+    profileId: ''
+  }
   componentDidMount() {
-    axios.get('/api/workout').then(resp => {
+    var input = JSON.parse(window.localStorage.getItem('profile'))
+    this.setState({ profileId: input[0].id })
+    axios.get(`/api/workout?profileId=${input[0].id}`).then(resp => {
       this.setState({ workouts: resp.data })
     })
-    var auth = localStorage.getItem('auth') === 'true'
-    var profile = auth ? localStorage.getItem('profile') : ''
-    this.setState({ auth, profile })
-    console.log({ auth, profile })
   }
+  handleBuildSubmit = () => {}
+
   render() {
     return (
-      <div>
-        <p>This is the profile data page</p>
-      </div>
+      <Form onSubmitStart={this.handleBuildSubmit}>
+        <Field.Group>
+          <p>Build a new workout</p>
+
+          <Link to={`/build/${this.state.profileId}`}>
+            <button type="button">Build workout</button>
+          </Link>
+        </Field.Group>
+      </Form>
     )
   }
 }

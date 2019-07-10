@@ -23,29 +23,23 @@ namespace Workout_Buddy.Controllers
 
         // GET: api/Profile
         [HttpGet]
-        public async Task<ActionResult<Profile>> GetProfile([FromQuery] string email)
+        public async Task<ActionResult<IEnumerable<Profile>>> GetProfile()
         {
-            var profile = _context.Profile.FirstOrDefault(w => w.Email == email);
-            if (profile == null)
-            {
-                return NotFound();
-            }
-
-            return profile;
+            return await _context.Profiles.ToListAsync();
         }
 
         // GET: api/Profile/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Profile>> GetProfile(int id)
+        [HttpGet("login")]
+        public async Task<ActionResult<IEnumerable<Profile>>> GetProfileID([FromQuery] string email)
         {
-            var profile = await _context.Profile.FindAsync(id);
+            var profile = _context.Profile.Where(u=>u.Email == email);
 
             if (profile == null)
             {
                 return NotFound();
             }
 
-            return profile;
+            return await profile.ToListAsync();
         }
 
         // PUT: api/Profile/5
