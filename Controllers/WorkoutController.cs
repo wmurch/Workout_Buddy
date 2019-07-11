@@ -34,15 +34,26 @@ namespace Workout_Buddy.Controllers
             return await results.ToListAsync();
         }
         // GET: api/Workout
-        /* [HttpGet("exercises")]
-        public async Task<ActionResult<IEnumerable<Exercise>>> GetWorkouts([FromQuery]int id)
+        [HttpGet("new")]
+        public async Task<List<Workout>> NewWorkout([FromQuery] string name, int id)
         {
-            var rv = _context.Exercises.Where(w => w.WorkoutId == id);
-
-            return await rv.ToListAsync();
+            var results = _context.Workouts.Where(w => w.Name == name && w.ProfileId == id);
+            return await results.ToListAsync();
         }
- */
+
         // GET: api/Workout/5
+         [HttpGet("{id}")]
+        public async Task<ActionResult<Workout>> GetWorkout(int id)
+        {
+            var workout = await _context.Workouts.FindAsync(id);
+
+            if (workout == null)
+            {
+                return NotFound();
+            }
+
+            return workout;
+        }
 
 
         // PUT: api/Workout/5

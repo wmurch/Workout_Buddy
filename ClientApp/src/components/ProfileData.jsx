@@ -12,12 +12,11 @@ class ProfileData extends Component {
     isSubmitting: false
   }
   componentDidMount() {
-    var input = JSON.parse(window.localStorage.getItem('profile'))
-    this.setState({ profileId: input[0].id })
-    axios.get(`/api/workout?profileId=${input[0].id}`).then(resp => {
-      this.setState({ workout: resp.data })
+    axios.get(`/api/workout`).then(resp => {
+      this.setState({ workouts: resp.data })
     })
   }
+
   createWorkout = ({ serialized, fields, form }) => {
     return axios
       .post('/api/workout', {
@@ -25,31 +24,48 @@ class ProfileData extends Component {
       })
       .then(resp => {
         this.setState({
-          workout: this.state.workout.concat(this.state.workout)
+          workouts: this.state.workouts.concat(this.state.workout)
         })
-        localStorage.setItem('workout', JSON.stringify(this.state.workout))
-        window.location.href = `/build/${this.state.profileId}`
-        console.log(this.state.workout)
+        window.location.href = '/build'
       })
   }
 
-  handleWorkoutSubmit = () => {
-    this.setState({ isSubmitting: true })
+  /* handleWorkoutSubmit = () => {
+    axios
+      .get(
+        `/api//workout/new?name=${this.state.workout.name}&id=${
+          this.state.profileId
+        }`
+      )
+      .then(resp => {
+        this.setState({ newWorkout: resp.data })
+      })
+      .then(data => {
+        console.log(this.state.workout)
+        localStorage.setItem('workout', JSON.stringify(this.state.newWorkout))
+        window.location.href = `/build/${this.state.profileId}`
+      })
   }
+ */
   updateWorkoutValue = async e => {
     var input = JSON.parse(window.localStorage.getItem('profile'))
     const state = this.state
-    state.workout.profileId = input[0].id
+    this.state.workout.profileId = input[0].id
     state.workout[e.target.name] = e.target.value
+    localStorage.setItem('workout', JSON.stringify(e.target.value))
+    let idLocalLength = this.state.workouts.length
+    let idLocalStore = this.state.workouts[idLocalLength - 1].id + 1
+    localStorage.setItem('id', JSON.stringify(idLocalStore))
+    console.log(idLocalStore)
+    /* localStorage.setItem(
+      'id',
+      JSON.stringify(this.state.workouts[this.state.workouts.length - 1] + 1)
+    ) */
     this.setState(state)
-    console.log(state)
   }
   render() {
     return (
-      <Form
-        action={this.createWorkout}
-        onSubmitStart={this.handleWorkoutSubmit}
-      >
+      <Form action={this.createWorkout}>
         <Field.Group name="workout">
           <h1>Build Your Workout</h1>
           <p>Search for an exercise for your workout</p>

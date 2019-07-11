@@ -3,70 +3,71 @@ import axios from 'axios'
 import Autocomplete from 'react-autocomplete'
 import { Form, Field } from 'react-advanced-form'
 import Button from './Button'
-import Suggestions from './Suggestions'
 
 export class BuildData extends Component {
   static displayName = BuildData.name
   state = {
-    query: '',
     workoutId: '',
-    searchTerm: '',
-    workoutDisabled: false,
-    exerciseDisabled: true,
-    workout: [],
+    exercise: [],
     value: '',
+    query: '',
     exercises: [],
     items: [],
     selectedExercise: {},
+    results: [],
     workouts: [],
-
-    results: []
+    profileWorkout: []
   }
-
   componentDidMount() {
-    var input = JSON.parse(window.localStorage.getItem('workout'))
-    this.setState({ workout: input[0].name, workoutId: input[0].id })
-    axios.get('/api/workout').then(resp => {
-      this.setState({ workouts: resp.data })
-    })
+    const searchId = JSON.parse(window.localStorage.getItem('id'))
+    if (!isNaN(parseInt(searchId))) {
+      axios.get(`/api/exercise/workout/${searchId}`).then(data => {
+        console.log({ data })
+        if (data.status === 200) {
+          this.setState({ profileWorkout: data.data })
+        }
+      })
+    }
   }
 
-  addExercise = ({ serialized, fields, form }) => {
+  createExercise = ({ serialized, fields, form }) => {
+    console.log(this.state.exercise)
     return axios
-      .post('/api/workout', {
-        ...this.state.workout,
-        ProfileId: this.state.profileId,
-        exerciseId: this.state.selectedExercise.id
+      .post('/api/exercise', {
+        ...this.state.exercise
       })
       .then(resp => {
         this.setState({
-          workout: this.state.workout.concat(this.state.workout)
+          exercises: this.state.exercise.concat(this.state.exercise)
         })
-        console.log(this.state.workout)
-      })
-      .catch(err => {
-        console.log(err)
+        console.log(this.state.exercises)
       })
   }
-  getWorkout = () => {
-    axios.get(`/api/workout/workout?id=${this.state.query}`).then(resp => {
-      this.setState({ results: resp.data })
-      console.log(resp.data)
-    })
-  }
+
   getExercisesForAutoComplete(value, callback) {
     axios.get(`/api/search/exercises?=${value}`).then(resp => {
       callback(resp.data)
     })
   }
-
   updateExerciseValue = async e => {
+    var id = JSON.parse(window.localStorage.getItem('id'))
+    console.log(this.state.selectedExercise)
     const state = this.state
+    state.exercise.workoutId = id
+    state.exercise.name = this.state.selectedExercise.name
     state.exercise[e.target.name] = e.target.value
     this.setState(state)
     console.log(state)
   }
+  exerciseList = () => {
+    const yourWorkout = this.state.profileWorkout.map
+    const listItems = yourWorkout.map(exercise => (
+      <li key={exercise.id.toString()}>{exercise}</li>
+    ))
+    return <ul>{listItems}</ul>
+  }
   render() {
+    const workoutName = JSON.parse(window.localStorage.getItem('workout'))
     return (
       <div>
         <Form
@@ -74,7 +75,7 @@ export class BuildData extends Component {
           onSubmitStart={this.handleExerciseSubmit}
         >
           <Field.Group name="body">
-            <h1>Welcome to the {this.state.workout} Page</h1>
+            <h1>Welcome to the {workoutName} Page</h1>
             <label>
               Exercise
               <Autocomplete
@@ -131,6 +132,9 @@ export class BuildData extends Component {
                 name="Rep"
                 onChange={this.updateExerciseValue}
               />
+            </label>
+            <label>
+              Weight
               <input
                 type="number"
                 label="Weight"
@@ -141,9 +145,16 @@ export class BuildData extends Component {
             <Button type="submitExercise">Add Exercise</Button>
           </Field.Group>
           <Field.Group name="table">
-            <ul>
-              <Suggestions results={this.state.results} />
-            </ul>
+            {/* <ul className="listGroup">
+                {this.state.profileWorkout.map(exercise => ({ return(
+
+                  <li className="list-group-item list-group-item-primary">
+                  exercise.toString() }))}
+              </li>
+                )
+                  
+            </ul> */}
+            <p>{this.state.profileWorkout.toString()}</p>
           </Field.Group>
         </Form>
       </div>
