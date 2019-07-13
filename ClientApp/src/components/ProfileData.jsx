@@ -55,6 +55,7 @@ class ProfileData extends Component {
     localStorage.setItem('workout', JSON.stringify(e.target.value))
     let idLocalLength = this.state.workouts.length
     let idLocalStore = this.state.workouts[idLocalLength - 1].id + 1
+    console.log(idLocalLength)
     localStorage.setItem('id', JSON.stringify(idLocalStore))
     console.log(idLocalStore)
     /* localStorage.setItem(

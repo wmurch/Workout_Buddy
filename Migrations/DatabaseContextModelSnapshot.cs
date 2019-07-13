@@ -60,7 +60,19 @@ namespace sdgreacttemplate.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Profile");
+                    b.ToTable("Profiles");
+                });
+
+            modelBuilder.Entity("Workout_Buddy.Models.Suggestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Suggestions");
                 });
 
             modelBuilder.Entity("Workout_Buddy.Models.Workout", b =>

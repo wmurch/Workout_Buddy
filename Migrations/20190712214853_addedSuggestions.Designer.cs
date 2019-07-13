@@ -10,8 +10,8 @@ using workout_buddy;
 namespace sdgreacttemplate.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190703184229_correctedWorkoutJointoExercise")]
-    partial class correctedWorkoutJointoExercise
+    [Migration("20190712214853_addedSuggestions")]
+    partial class addedSuggestions
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,11 +32,17 @@ namespace sdgreacttemplate.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int?>("ProfileId");
+                    b.Property<int>("Rep");
+
+                    b.Property<int>("Sets");
+
+                    b.Property<int>("Weight");
+
+                    b.Property<int?>("WorkoutId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("WorkoutId");
 
                     b.ToTable("Exercises");
                 });
@@ -48,15 +54,27 @@ namespace sdgreacttemplate.Migrations
 
                     b.Property<string>("Email");
 
+                    b.Property<string>("FirstName");
+
                     b.Property<string>("Goal");
 
-                    b.Property<string>("firstName");
-
-                    b.Property<string>("lastName");
+                    b.Property<string>("LastName");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Profile");
+                    b.ToTable("Profiles");
+                });
+
+            modelBuilder.Entity("Workout_Buddy.Models.Suggestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Suggestions");
                 });
 
             modelBuilder.Entity("Workout_Buddy.Models.Workout", b =>
@@ -64,21 +82,11 @@ namespace sdgreacttemplate.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("ExerciseId");
-
                     b.Property<string>("Name");
 
                     b.Property<int?>("ProfileId");
 
-                    b.Property<int>("Rep");
-
-                    b.Property<int>("Sets");
-
-                    b.Property<int>("Weight");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ExerciseId");
 
                     b.HasIndex("ProfileId");
 
@@ -87,19 +95,15 @@ namespace sdgreacttemplate.Migrations
 
             modelBuilder.Entity("Workout_Buddy.Models.Exercise", b =>
                 {
-                    b.HasOne("Workout_Buddy.Models.Profile")
+                    b.HasOne("Workout_Buddy.Models.Workout", "Workout")
                         .WithMany("Exercises")
-                        .HasForeignKey("ProfileId");
+                        .HasForeignKey("WorkoutId");
                 });
 
             modelBuilder.Entity("Workout_Buddy.Models.Workout", b =>
                 {
-                    b.HasOne("Workout_Buddy.Models.Exercise", "Exercise")
-                        .WithMany("Workouts")
-                        .HasForeignKey("ExerciseId");
-
                     b.HasOne("Workout_Buddy.Models.Profile", "Profile")
-                        .WithMany()
+                        .WithMany("Workouts")
                         .HasForeignKey("ProfileId");
                 });
 #pragma warning restore 612, 618

@@ -16,10 +16,9 @@ export class LoginData extends Component {
         this.setState({ profile: resp.data, isAuthenticated: true })
       })
       .then(data => {
-        const { auth, profile } = this.state
         localStorage.setItem('auth', JSON.stringify(this.state.isAuthenticated))
-        localStorage.setItem('profile', JSON.stringify(this.state.profile))
-        /* console.log(JSON.parse(window.localStorage.getItem('profileId'))) */
+        localStorage.setItem('profileId', JSON.stringify(this.state.profile))
+        console.log(JSON.parse(window.localStorage.getItem('profileId')))
         window.location.href = '/profile'
       })
   }

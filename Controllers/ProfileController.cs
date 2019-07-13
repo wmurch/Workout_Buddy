@@ -32,7 +32,7 @@ namespace Workout_Buddy.Controllers
         [HttpGet("login")]
         public async Task<ActionResult<IEnumerable<Profile>>> GetProfileID([FromQuery] string email)
         {
-            var profile = _context.Profile.Where(u=>u.Email == email);
+            var profile = _context.Profiles.Where(u => u.Email == email);
 
             if (profile == null)
             {
@@ -76,7 +76,7 @@ namespace Workout_Buddy.Controllers
         [HttpPost]
         public async Task<ActionResult<Profile>> PostProfile(Profile profile)
         {
-            _context.Profile.Add(profile);
+            _context.Profiles.Add(profile);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetProfile", new { id = profile.Id }, profile);
@@ -87,13 +87,13 @@ namespace Workout_Buddy.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Profile>> DeleteProfile(int id)
         {
-            var profile = await _context.Profile.FindAsync(id);
+            var profile = await _context.Profiles.FindAsync(id);
             if (profile == null)
             {
                 return NotFound();
             }
 
-            _context.Profile.Remove(profile);
+            _context.Profiles.Remove(profile);
             await _context.SaveChangesAsync();
 
             return profile;
@@ -101,7 +101,7 @@ namespace Workout_Buddy.Controllers
 
         private bool ProfileExists(int id)
         {
-            return _context.Profile.Any(e => e.Id == id);
+            return _context.Profiles.Any(e => e.Id == id);
         }
     }
 }

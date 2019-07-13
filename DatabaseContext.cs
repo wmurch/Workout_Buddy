@@ -31,7 +31,7 @@ namespace workout_buddy
             {
                 var envConn = Environment.GetEnvironmentVariable("DATABASE_URL");
 
-                var conn = "server=localhost;database=workout_buddydb;User Id=postgres;Password=Nadas0ul12#";
+                var conn = "server=localhost;database=workout_buddydb3;User Id=postgres;Password=Nadas0ul12#";
                 if (envConn != null)
                 {
                     conn = ConvertPostConnectionToConnectionString(envConn);
@@ -49,11 +49,12 @@ namespace workout_buddy
 
 
 
-        public DbSet<Workout_Buddy.Models.Profile> Profile { get; set; }
+
 
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Workout> Workouts { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
 
+        public DbSet<Suggestion> Suggestions { get; set; }
     }
 }

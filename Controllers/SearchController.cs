@@ -19,9 +19,9 @@ namespace Workout_Buddy.Controllers
             _context = context;
         }
         [HttpGet("exercises")]
-        public async Task<List<Exercise>> SearchExercises([FromQuery] string searchTerm)
+        public async Task<List<Suggestion>> SearchExercises([FromQuery] string searchTerm)
         {
-            var results = _context.Exercises.Where(w => w.Name.ToLower().Contains(searchTerm.ToLower()));
+            var results = _context.Suggestions.Where(w => w.Name.ToLower().Contains(searchTerm.ToLower()));
             return await results.ToListAsync();
         }
     }

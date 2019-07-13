@@ -3,31 +3,28 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace sdgreacttemplate.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class addedSuggestions : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Profile",
+                name: "Suggestions",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    firstName = table.Column<string>(nullable: true),
-                    lastName = table.Column<string>(nullable: true),
-                    PropertyName = table.Column<int>(nullable: false),
-                    Goal = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Profile", x => x.Id);
+                    table.PrimaryKey("PK_Suggestions", x => x.Id);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Profile");
+                name: "Suggestions");
         }
     }
 }

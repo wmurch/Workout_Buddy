@@ -10,8 +10,8 @@ using workout_buddy;
 namespace sdgreacttemplate.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190708200504_addedExerciseJoin")]
-    partial class addedExerciseJoin
+    [Migration("20190712211127_newDatabase")]
+    partial class newDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,12 @@ namespace sdgreacttemplate.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<int>("Rep");
+
+                    b.Property<int>("Sets");
+
+                    b.Property<int>("Weight");
+
                     b.Property<int?>("WorkoutId");
 
                     b.HasKey("Id");
@@ -48,15 +54,15 @@ namespace sdgreacttemplate.Migrations
 
                     b.Property<string>("Email");
 
+                    b.Property<string>("FirstName");
+
                     b.Property<string>("Goal");
 
-                    b.Property<string>("firstName");
-
-                    b.Property<string>("lastName");
+                    b.Property<string>("LastName");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Profile");
+                    b.ToTable("Profiles");
                 });
 
             modelBuilder.Entity("Workout_Buddy.Models.Workout", b =>
@@ -67,12 +73,6 @@ namespace sdgreacttemplate.Migrations
                     b.Property<string>("Name");
 
                     b.Property<int?>("ProfileId");
-
-                    b.Property<int>("Rep");
-
-                    b.Property<int>("Sets");
-
-                    b.Property<int>("Weight");
 
                     b.HasKey("Id");
 

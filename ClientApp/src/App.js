@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Navbar, Button } from 'reactstrap'
 import { Switch } from 'react-router-dom'
 import { Route } from 'react-router'
 import { Layout } from './components/Layout'
@@ -8,6 +9,7 @@ import Login from './pages/Login'
 import { Build } from './pages/Build'
 import { Register } from './components/Register'
 import Profile from './pages/Profile'
+import Logout from './components/LogoutData'
 /* import ProtectedRoute from './components/ProtectedRoute' */
 
 export default class App extends Component {
@@ -22,6 +24,7 @@ export default class App extends Component {
           <Route path="/build" component={Build} />
           <Route path="/search" component={Search} />
           <Route path="/profile" component={Profile} />
+          <Route path="/logout" component={Logout} />
         </Switch>
       </Layout>
     )
