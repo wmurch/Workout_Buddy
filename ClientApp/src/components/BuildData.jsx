@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import Autocomplete from 'react-autocomplete'
 import { Form, Field } from 'react-advanced-form'
+
 import Button from './Button'
 
 export class BuildData extends Component {
@@ -12,14 +13,22 @@ export class BuildData extends Component {
     value: '',
     query: '',
     exercises: [],
+    suggestions: [],
     items: [],
     selectedExercise: {},
     results: [],
     workouts: [],
     profileWorkout: [],
+    Sets: '',
+    Rep: '',
+    Weight: '',
     isDirty: false
   }
   componentDidMount = async () => {
+    this.getExercises()
+  }
+
+  getExercises = async () => {
     const searchId = JSON.parse(window.localStorage.getItem('id'))
     if (!isNaN(parseInt(searchId))) {
       await axios.get(`/api/exercise/workout/${searchId}`).then(data => {
@@ -30,6 +39,7 @@ export class BuildData extends Component {
       console.log(this.state.exercises)
     }
   }
+
   createExercise = async ({ serialized, fields, form }) => {
     console.log(this.state.exercise)
     return axios
@@ -37,10 +47,15 @@ export class BuildData extends Component {
         ...this.state.exercise
       })
       .then(resp => {
+        this.getExercises()
         this.setState({
-          profileWorkout: this.state.exercise.concat(this.state.exercise)
+          exercise: [],
+          Sets: '',
+          Rep: '',
+          Weight: '',
+          value: ''
         })
-        console.log({ ...this.state.profileWorkout })
+        console.log({ ...this.state.exercises })
       })
   }
   getExercisesForAutoComplete(value, callback) {
@@ -55,6 +70,8 @@ export class BuildData extends Component {
     state.exercise.workoutId = id
     state.exercise.name = this.state.selectedExercise.name
     state.exercise[e.target.name] = e.target.value
+    state[e.target.name] = e.target.value
+    console.log(state)
     this.setState(state)
   }
   resetForm = () => {
@@ -63,7 +80,7 @@ export class BuildData extends Component {
 
   handleReset = () => {
     this.setState(this.state)
-    this.setState({ value: '' })
+    /*  this.setState({ value: '' }) */
   }
 
   handleFirstChange = () => {
@@ -81,6 +98,7 @@ export class BuildData extends Component {
           onReset={this.handleReset}
           onFirstChange={this.handleFirstChange}
         >
+          <Button type="submit">Add Exercise</Button>
           <Field.Group name="body">
             <h1>Welcome to the {workoutName} Page</h1>
             <label>
@@ -90,7 +108,7 @@ export class BuildData extends Component {
                   id: 'exerciseId'
                 }}
                 value={this.state.value}
-                items={this.state.exercises}
+                items={this.state.suggestions}
                 getItemValue={item => item.name}
                 onSelect={(value, exercise) => {
                   this.setState({ value, selectedExercise: exercise })
@@ -101,7 +119,7 @@ export class BuildData extends Component {
                   this.requestTimer = this.getExercisesForAutoComplete(
                     value,
                     searchResults => {
-                      this.setState({ exercises: searchResults })
+                      this.setState({ suggestions: searchResults })
                     }
                   )
                 }}
@@ -121,6 +139,8 @@ export class BuildData extends Component {
             <label>
               Sets
               <input
+                value={this.state.Sets}
+                className=".col-large-*"
                 type="number"
                 label="Sets"
                 name="Sets"
@@ -130,15 +150,23 @@ export class BuildData extends Component {
             <label>
               Reps
               <input
+                value={this.state.Rep}
                 type="number"
                 label="Rep"
                 name="Rep"
                 onChange={this.updateExerciseValue}
               />
             </label>
-            <Button id="reset" type="reset" onClick={this.resetForm}>
-              Add Exercise
-            </Button>
+            <label>
+              Weight
+              <input
+                value={this.state.Weight}
+                type="number"
+                label="Weight"
+                name="Weight"
+                onChange={this.updateExerciseValue}
+              />
+            </label>
           </Field.Group>
           <Field.Group name="table">
             <ul className="list-unstyled">
@@ -147,8 +175,8 @@ export class BuildData extends Component {
                   <li key={exercise.id}>
                     <p>{exercise.name}</p>
                     <p>{exercise.sets}</p>
-
                     <p>{exercise.rep}</p>
+                    <p>{exercise.weight}</p>
                   </li>
                 )
               })}

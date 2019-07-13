@@ -12,7 +12,8 @@ class ProfileData extends Component {
     isSubmitting: false
   }
   componentDidMount() {
-    axios.get(`/api/workout`).then(resp => {
+    var input = JSON.parse(window.localStorage.getItem('profile'))
+    axios.get(`/api/workout/profiles?profileId=${input[0].id}`).then(resp => {
       this.setState({ workouts: resp.data })
     })
   }
@@ -26,7 +27,7 @@ class ProfileData extends Component {
         this.setState({
           workouts: this.state.workouts.concat(this.state.workout)
         })
-        window.location.href = '/build'
+        /* window.location.href = '/build' */
       })
   }
 
@@ -48,9 +49,7 @@ class ProfileData extends Component {
   }
  */
   updateWorkoutValue = async e => {
-    var input = JSON.parse(window.localStorage.getItem('profile'))
     const state = this.state
-    this.state.workout.profileId = input[0].id
     state.workout[e.target.name] = e.target.value
     localStorage.setItem('workout', JSON.stringify(e.target.value))
     let idLocalLength = this.state.workouts.length
@@ -80,6 +79,17 @@ class ProfileData extends Component {
             />
             <Button type="submitWorkout">Create New Workout</Button>
           </label>
+        </Field.Group>
+        <Field.Group name="table">
+          <ul className="list-unstyled">
+            {this.state.workouts.map(workout => {
+              return (
+                <li key={workout.id}>
+                  <p>{workout.name}</p>
+                </li>
+              )
+            })}
+          </ul>
         </Field.Group>
       </Form>
     )
