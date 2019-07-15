@@ -8,7 +8,7 @@ class Logout extends Component {
   componentWillMount() {
     this.isAuthenticated = false
     localStorage.clear()
-    window.location.href = '/profile'
+    window.location.href = '/'
   }
   render() {
     return null

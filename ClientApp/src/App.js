@@ -10,6 +10,7 @@ import { Build } from './pages/Build'
 import { Register } from './components/Register'
 import Profile from './pages/Profile'
 import Logout from './components/LogoutData'
+
 /* import ProtectedRoute from './components/ProtectedRoute' */
 
 export default class App extends Component {

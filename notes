@@ -96,3 +96,182 @@ dotnet aspnet-codegenerator controller -name AuthController -api -m Auth -dc Dat
         "workoutId": null,
         "workout": null
     }
+    <Form
+          action={this.createExercise}
+          ref={form => (window.form = form)}
+          onReset={this.handleReset}
+          onFirstChange={this.handleFirstChange}
+        >
+          <Button type="submit">Add Exercise</Button>
+          <Field.Group name="body">
+            <h1>Welcome to the {workoutName} Page</h1>
+            <label>
+              Exercise
+              <Autocomplete
+                inputProps={{
+                  id: 'exerciseId'
+                }}
+                value={this.state.value}
+                items={this.state.suggestions}
+                getItemValue={item => item.name}
+                onSelect={(value, exercise) => {
+                  this.setState({ value, selectedExercise: exercise })
+                }}
+                onChange={(event, value) => {
+                  this.setState({ value })
+                  clearTimeout(this.requestTimer)
+                  this.requestTimer = this.getExercisesForAutoComplete(
+                    value,
+                    searchResults => {
+                      this.setState({ suggestions: searchResults })
+                    }
+                  )
+                }}
+                renderMenu={children => <div className="menu">{children}</div>}
+                renderItem={(item, isHighlighted) => (
+                  <div
+                    className={`item ${
+                      isHighlighted ? 'item-highlighted' : ''
+                    }`}
+                    key={item.id}
+                  >
+                    {item.name}
+                  </div>
+                )}
+              />
+            </label>
+            <label>
+              Sets
+              <input
+                value={this.state.Sets}
+                className=".col-large-*"
+                type="number"
+                label="Sets"
+                name="Sets"
+                onChange={this.updateExerciseValue}
+              />
+            </label>
+            <label>
+              Reps
+              <input
+                value={this.state.Rep}
+                type="number"
+                label="Rep"
+                name="Rep"
+                onChange={this.updateExerciseValue}
+              />
+            </label>
+            <label>
+              Weight
+              <input
+                value={this.state.Weight}
+                type="number"
+                label="Weight"
+                name="Weight"
+                onChange={this.updateExerciseValue}
+              />
+            </label>
+          </Field.Group>
+          <Field.Group name="table">
+            <ul className="list-unstyled">
+              {this.state.exercises.map(exercise => {
+                return (
+                  <li key={exercise.id}>
+                    <p>{exercise.name}</p>
+                    <p>{exercise.sets}</p>
+                    <p>{exercise.rep}</p>
+                    <p>{exercise.weight}</p>
+                  </li>
+                )
+              })}
+            </ul>
+          </Field.Group>
+        </Form>
+
+
+        import React, { Component } from 'react'
+import {
+  Nav,
+  Container,
+  Collapse,
+  NavbarBrand,
+  NavItem,
+  NavLink
+} from 'reactstrap'
+import { Link } from 'react-router-dom'
+import './NavMenu.css'
+
+export class NavMenu extends Component {
+  static displayName = NavMenu.name
+
+  constructor(props) {
+    super(props)
+
+    this.toggleNavbar = this.toggleNavbar.bind(this)
+    this.state = {
+      collapsed: true
+    }
+  }
+
+  toggleNavbar() {
+    this.setState({
+      collapsed: !this.state.collapsed
+    })
+  }
+
+  render() {
+    return (
+      <header>
+        <Nav vertical>
+          <Container>
+            <NavbarBrand tag={Link} to="/">
+              Fit Trax
+            </NavbarBrand>
+            <Collapse
+              className="d-sm-inline-flex flex-sm-row-reverse"
+              isOpen={!this.state.collapsed}
+              navbar
+            >
+              <ul className="navbar-nav flex-grow">
+                <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/">
+                    Home
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/login">
+                    Login
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/register">
+                    Register
+                  </NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/logout">
+                    Logout
+                  </NavLink>
+                </NavItem>
+              </ul>
+            </Collapse>
+          </Container>
+        </Nav>
+      </header>
+      <Form>
+        <h1>Welcome to Fit Trax</h1>
+        <FormGroup>
+          <p>If you do not have an account create one below</p>
+          <Link to="/register">
+            <button type="button">Create an Account</button>
+          </Link>
+        </FormGroup>
+        <ormGroup>
+          <p>If you have an account go ahead and log in</p>
+          <Link to="/login">
+            <button type="button">Login</button>
+          </Link>
+        </ormGroup>
+      </Form>
+    )
+    )
+  }
+}

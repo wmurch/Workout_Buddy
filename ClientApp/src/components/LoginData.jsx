@@ -1,7 +1,15 @@
 import React, { Component } from 'react'
-import { Form, Field } from 'react-advanced-form'
-/* import { Redirect } from 'react-router'; */
+import {
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  FormText,
+  Media
+} from 'reactstrap'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 export class LoginData extends Component {
   state = {
@@ -17,8 +25,11 @@ export class LoginData extends Component {
       })
       .then(data => {
         localStorage.setItem('auth', JSON.stringify(this.state.isAuthenticated))
-        localStorage.setItem('profileId', JSON.stringify(this.state.profile))
-        console.log(JSON.parse(window.localStorage.getItem('profileId')))
+        localStorage.setItem(
+          'profileId',
+          JSON.stringify(this.state.profile[0].id)
+        )
+
         window.location.href = '/profile'
       })
   }
@@ -30,20 +41,24 @@ export class LoginData extends Component {
   render() {
     return (
       <div>
-        <Form action={this.getProfile} onSubmitStart={this.getProfile}>
-          <Field.Group>
-            <label htmlFor="emailLogin">
-              <input
+        <Form className="login-form" onSubmit={this.getProfile}>
+          <FormGroup>
+            <Label htmlFor="emailLogin">
+              <Input
                 type="text"
                 name="email"
                 placeholder="Email"
                 onChange={this.updateValue}
               />
-            </label>
-            <button type="submit" className="btn btn-primary">
+            </Label>
+            <FormText color="muted">
+              If you do not have an account please register here:
+              <Link to="/register"> Register</Link>
+            </FormText>
+            <Button type="submit" className="btn btn-primary">
               submit
-            </button>
-          </Field.Group>
+            </Button>
+          </FormGroup>
         </Form>
       </div>
     )

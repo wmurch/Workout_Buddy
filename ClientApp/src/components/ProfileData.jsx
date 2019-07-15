@@ -1,7 +1,14 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Form, Field } from 'react-advanced-form'
-import Button from './Button'
+import {
+  Button,
+  Form,
+  FormGroup,
+  ListGroup,
+  ListGroupItem,
+  Input,
+  Label
+} from 'reactstrap'
 
 class ProfileData extends Component {
   state = {
@@ -12,25 +19,26 @@ class ProfileData extends Component {
     isSubmitting: false
   }
   componentDidMount() {
-    var input = JSON.parse(window.localStorage.getItem('profile'))
-    axios.get(`/api/workout/profiles?profileId=${input[0].id}`).then(resp => {
-      this.setState({ workouts: resp.data })
+    var input = JSON.parse(window.localStorage.getItem('profileId'))
+    axios.get(`/api/workout/profiles?profileId=${input}`).then(resp => {
+      this.setState({ workouts: resp.data, profileId: input })
     })
   }
 
-  createWorkout = ({ serialized, fields, form }) => {
+  createWorkout = async ({ serialized, fields, form }) => {
     return axios
       .post('/api/workout', {
         ...this.state.workout
       })
       .then(resp => {
+        /* this.handleWorkoutSubmit() */
         this.setState({
           workouts: this.state.workouts.concat(this.state.workout)
         })
-        /* window.location.href = '/build' */
+        debugger
+        window.location.href = '/build'
       })
   }
-
   /* handleWorkoutSubmit = () => {
     axios
       .get(
@@ -46,17 +54,23 @@ class ProfileData extends Component {
         localStorage.setItem('workout', JSON.stringify(this.state.newWorkout))
         window.location.href = `/build/${this.state.profileId}`
       })
-  }
- */
+  } */
+
   updateWorkoutValue = async e => {
     const state = this.state
+    state.workout.profileId = JSON.parse(
+      window.localStorage.getItem('profileId')
+    )
     state.workout[e.target.name] = e.target.value
     localStorage.setItem('workout', JSON.stringify(e.target.value))
     let idLocalLength = this.state.workouts.length
-    let idLocalStore = this.state.workouts[idLocalLength - 1].id + 1
-    console.log(idLocalLength)
-    localStorage.setItem('id', JSON.stringify(idLocalStore))
-    console.log(idLocalStore)
+    if (idLocalLength) {
+      let idLocalStore = this.state.workouts[idLocalLength - 1].id + 1
+      localStorage.setItem('id', JSON.stringify(idLocalStore))
+    } else {
+      let idLocalStore = 1
+      localStorage.setItem('id', JSON.stringify(idLocalStore))
+    }
     /* localStorage.setItem(
       'id',
       JSON.stringify(this.state.workouts[this.state.workouts.length - 1] + 1)
@@ -65,32 +79,38 @@ class ProfileData extends Component {
   }
   render() {
     return (
-      <Form action={this.createWorkout}>
-        <Field.Group name="workout">
+      <Form onSubmit={this.createWorkout}>
+        <FormGroup name="workout">
           <h1>Build Your Workout</h1>
           <p>Search for an exercise for your workout</p>
-          <label>
+          <Label>
             Workout Name
-            <input
+            <Input
               type="text"
               name="Name"
               ref={input => (this.search = input)}
               onChange={this.updateWorkoutValue}
             />
-            <Button type="submitWorkout">Create New Workout</Button>
-          </label>
-        </Field.Group>
-        <Field.Group name="table">
-          <ul className="list-unstyled">
+            <Button as="input" type="submit" value="Submit" size="sm">
+              Create New Workout
+            </Button>
+          </Label>
+        </FormGroup>
+        <FormGroup name="table">
+          <ListGroup>
             {this.state.workouts.map(workout => {
               return (
-                <li key={workout.id}>
+                <ListGroupItem
+                  key={workout.id}
+                  color="primary"
+                  className="justify-content-between text-center"
+                >
                   <p>{workout.name}</p>
-                </li>
+                </ListGroupItem>
               )
             })}
-          </ul>
-        </Field.Group>
+          </ListGroup>
+        </FormGroup>
       </Form>
     )
   }

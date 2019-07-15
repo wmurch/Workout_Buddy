@@ -1,74 +1,55 @@
 import React, { Component } from 'react'
-import {
-  Collapse,
-  Container,
-  Navbar,
-  NavbarBrand,
-  NavbarToggler,
-  NavItem,
-  NavLink
-} from 'reactstrap'
+import { Container, Nav, NavItem, NavbarBrand, NavLink } from 'reactstrap'
 import { Link } from 'react-router-dom'
 import './NavMenu.css'
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name
-
   constructor(props) {
     super(props)
 
-    this.toggleNavbar = this.toggleNavbar.bind(this)
+    this.toggle = this.toggle.bind(this)
     this.state = {
-      collapsed: true
+      dropdownOpen: false
     }
   }
 
-  toggleNavbar() {
+  toggle() {
     this.setState({
-      collapsed: !this.state.collapsed
+      dropdownOpen: !this.state.dropdownOpen
     })
   }
 
   render() {
     return (
       <header>
-        <Navbar
-          className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3"
-          light
-        >
-          <Container>
-            <NavbarBrand tag={Link} to="/">
-              Fit Trax
-            </NavbarBrand>
-            <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-            <Collapse
-              className="d-sm-inline-flex flex-sm-row-reverse"
-              isOpen={!this.state.collapsed}
-              navbar
-            >
-              <ul className="navbar-nav flex-grow">
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/">
-                    Home
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/login">
-                    Login
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/register">
-                    Register
-                  </NavLink>
-                  <NavLink tag={Link} className="text-dark" to="/logout">
-                    Logout
-                  </NavLink>
-                </NavItem>
-              </ul>
-            </Collapse>
-          </Container>
-        </Navbar>
+        <Container className="top-nav">
+          <NavbarBrand tag={Link} className="text-primary" to="/">
+            FitTrax
+          </NavbarBrand>
+          <Nav pills color="primary">
+            <NavItem>
+              <NavLink tag={Link} className="text-primary" to="/">
+                Home
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink tag={Link} className="text-primary" to="/profile">
+                Profile
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink tag={Link} className="text-primary" to="/build">
+                Build
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink tag={Link} className="text-dark" to="/logout">
+                Logout
+              </NavLink>
+            </NavItem>
+          </Nav>
+        </Container>
       </header>
     )
   }

@@ -1,13 +1,26 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import Autocomplete from 'react-autocomplete'
-import { Form, Field } from 'react-advanced-form'
-
-import Button from './Button'
+import { AsyncTypeahead } from 'react-bootstrap-typeahead'
+/* import { Form, Field } from 'react-advanced-form' */
+import {
+  Col,
+  Row,
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  InputGroup,
+  Table
+} from 'reactstrap'
 
 export class BuildData extends Component {
   static displayName = BuildData.name
   state = {
+    allowNew: false,
+    isLoading: false,
+    multiple: false,
+    options: [],
     workoutId: '',
     exercise: [],
     value: '',
@@ -58,11 +71,11 @@ export class BuildData extends Component {
         console.log({ ...this.state.exercises })
       })
   }
-  getExercisesForAutoComplete(value, callback) {
+  /*  getExercisesForAutoComplete(e) {
     axios.get(`/api/search/exercises?=${value}`).then(resp => {
       callback(resp.data)
     })
-  }
+  } */
   updateExerciseValue = async e => {
     var id = JSON.parse(window.localStorage.getItem('id'))
     console.log(id)
@@ -75,113 +88,97 @@ export class BuildData extends Component {
     this.setState(state)
   }
   resetForm = () => {
-    window.form.reset()
+    window.location.href = '/profile'
   }
 
-  handleReset = () => {
-    this.setState(this.state)
-    /*  this.setState({ value: '' }) */
-  }
-
-  handleFirstChange = () => {
-    this.setState({
-      isDirty: true
-    })
-  }
   render() {
     const workoutName = JSON.parse(window.localStorage.getItem('workout'))
     return (
       <div>
-        <Form
-          action={this.createExercise}
-          ref={form => (window.form = form)}
-          onReset={this.handleReset}
-          onFirstChange={this.handleFirstChange}
-        >
-          <Button type="submit">Add Exercise</Button>
-          <Field.Group name="body">
-            <h1>Welcome to the {workoutName} Page</h1>
-            <label>
-              Exercise
-              <Autocomplete
-                inputProps={{
-                  id: 'exerciseId'
-                }}
-                value={this.state.value}
-                items={this.state.suggestions}
-                getItemValue={item => item.name}
-                onSelect={(value, exercise) => {
-                  this.setState({ value, selectedExercise: exercise })
-                }}
-                onChange={(event, value) => {
-                  this.setState({ value })
-                  clearTimeout(this.requestTimer)
-                  this.requestTimer = this.getExercisesForAutoComplete(
-                    value,
-                    searchResults => {
-                      this.setState({ suggestions: searchResults })
-                    }
+        <Form onSubmit={this.createExercise}>
+          <FormGroup className="autoComplete">
+            <Row form>
+              <InputGroup>
+                <Col md={6}>
+                  <h1>Welcome to the {workoutName} Page</h1>
+                  <Label>
+                    Exercise
+                    {/* <AsyncTypeahead
+                      {...this.state}
+                      bsSize="sm"
+                      labelKey="loginexercise"
+                      minLength={3}
+                      onSearch={this._handleSearch}
+                      placeholder="Enter your exercise..."
+                    /> */}
+                  </Label>
+                </Col>
+                <Col xs={2}>
+                  <Label>
+                    Sets
+                    <Input
+                      bsSize="sm"
+                      value={this.state.Sets}
+                      className=".col-large-*"
+                      type="number"
+                      label="Sets"
+                      name="Sets"
+                      onChange={this.updateExerciseValue}
+                    />
+                  </Label>
+                </Col>
+                <Col xs={2}>
+                  <Label>
+                    Reps
+                    <Input
+                      bsSize="sm"
+                      value={this.state.Rep}
+                      type="number"
+                      label="Rep"
+                      name="Rep"
+                      onChange={this.updateExerciseValue}
+                    />
+                  </Label>
+                </Col>
+              </InputGroup>
+            </Row>
+          </FormGroup>
+          <FormGroup className="woInput" />
+          <FormGroup name="table">
+            <Table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Sets</th>
+                  <th>Reps</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.exercises.map(exercise => {
+                  return (
+                    <tr key={exercise.id}>
+                      <td>{exercise.name}</td>
+                      <td>{exercise.sets}</td>
+                      <td>{exercise.rep}</td>
+                    </tr>
                   )
-                }}
-                renderMenu={children => <div className="menu">{children}</div>}
-                renderItem={(item, isHighlighted) => (
-                  <div
-                    className={`item ${
-                      isHighlighted ? 'item-highlighted' : ''
-                    }`}
-                    key={item.id}
-                  >
-                    {item.name}
-                  </div>
-                )}
-              />
-            </label>
-            <label>
-              Sets
-              <input
-                value={this.state.Sets}
-                className=".col-large-*"
-                type="number"
-                label="Sets"
-                name="Sets"
-                onChange={this.updateExerciseValue}
-              />
-            </label>
-            <label>
-              Reps
-              <input
-                value={this.state.Rep}
-                type="number"
-                label="Rep"
-                name="Rep"
-                onChange={this.updateExerciseValue}
-              />
-            </label>
-            <label>
-              Weight
-              <input
-                value={this.state.Weight}
-                type="number"
-                label="Weight"
-                name="Weight"
-                onChange={this.updateExerciseValue}
-              />
-            </label>
-          </Field.Group>
-          <Field.Group name="table">
-            <ul className="list-unstyled">
-              {this.state.exercises.map(exercise => {
-                return (
-                  <li key={exercise.id}>
-                    <p>{exercise.name}</p>
-                    <p>{exercise.sets}</p>
-                    <p>{exercise.rep}</p>
-                    <p>{exercise.weight}</p>
-                  </li>
-                )
-              })}
-            </ul>
-          </Field.Group>
+                })}
+              </tbody>
+            </Table>
+          </FormGroup>
+          <FormGroup>
+            <Button variant="primary" type="submit" size="lg">
+              Add Exercise
+            </Button>
+            <Button
+              as="input"
+              type="reset"
+              value="reset"
+              onClick={this.resetForm}
+            >
+              Done
+            </Button>
+          </FormGroup>
         </Form>
       </div>
     )

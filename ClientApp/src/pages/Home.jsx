@@ -1,26 +1,27 @@
 import React, { Component } from 'react'
-import { Form, Field } from 'react-advanced-form'
-import { Link } from 'react-router-dom'
+import { Media } from 'reactstrap'
+import { LoginData } from '../components/LoginData'
+import Logo from '../images/fittrax.jpg'
+import './Home.css'
 
 export class Home extends Component {
   static displayName = Home.name
   render() {
     return (
-      <Form>
-        <h1>Welcome to Fit Trax</h1>
-        <Field.Group>
-          <p>If you do not have an account create one below</p>
-          <Link to="/register">
-            <button type="button">Create an Account</button>
-          </Link>
-        </Field.Group>
-        <Field.Group>
-          <p>If you have an account go ahead and log in</p>
-          <Link to="/login">
-            <button type="button">Login</button>
-          </Link>
-        </Field.Group>
-      </Form>
+      <div>
+        <Media className="home-header">
+          <Media object src={Logo} alt="Generic placeholder image" />
+
+          <Media body>
+            <Media heading>
+              Welcome to <span className="font-weight-bold">FitTrax</span>
+            </Media>
+            Welcome to the FitTrax App. This app was designed to help you track
+            your workouts on mobile or while traveling.
+          </Media>
+        </Media>
+        <LoginData />
+      </div>
     )
   }
 }
