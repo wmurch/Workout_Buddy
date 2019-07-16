@@ -1,22 +1,17 @@
 import React, { Component } from 'react'
-import {
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  FormText,
-  Media
-} from 'reactstrap'
+import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 
 export class LoginData extends Component {
   state = {
+    email: '',
+    password: '',
     profile: [],
     isAuthenticated: false
   }
-  getProfile = async () => {
+  getProfile = async e => {
+    e.preventDefault()
     console.log(this.state.profile.email)
     return axios
       .get(`/api/profile/login?email=${this.state.profile.email}`)
@@ -43,7 +38,7 @@ export class LoginData extends Component {
       <div>
         <Form className="login-form" onSubmit={this.getProfile}>
           <FormGroup>
-            <Label htmlFor="emailLogin">
+            <Label for="emailLogin">
               <Input
                 type="text"
                 name="email"
@@ -51,14 +46,26 @@ export class LoginData extends Component {
                 onChange={this.updateValue}
               />
             </Label>
-            <FormText color="muted">
-              If you do not have an account please register here:
-              <Link to="/register"> Register</Link>
-            </FormText>
-            <Button type="submit" className="btn btn-primary">
-              submit
-            </Button>
           </FormGroup>
+          <FormGroup>
+            <Label for="passwordLogin">
+              <Input
+                type="password"
+                name="Password"
+                placeholder="********"
+                onChange={this.updateValue}
+              />
+            </Label>
+          </FormGroup>
+          <FormText color="muted">
+            If you do not have an account please register here:
+            <Link to="/register">
+              <span className="font-weight-bolder">Register</span>{' '}
+            </Link>
+          </FormText>
+          <Button type="submit" className="btn btn-primary">
+            submit
+          </Button>
         </Form>
       </div>
     )

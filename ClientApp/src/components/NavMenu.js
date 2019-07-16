@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import { Container, Nav, NavItem, NavbarBrand, NavLink } from 'reactstrap'
+import { Nav, NavItem, NavLink, NavbarBrand, Container } from 'reactstrap'
 import { Link } from 'react-router-dom'
-import './NavMenu.css'
 
 export class NavMenu extends Component {
-  static displayName = NavMenu.name
   constructor(props) {
     super(props)
 
@@ -22,35 +20,35 @@ export class NavMenu extends Component {
 
   render() {
     return (
-      <header>
-        <Container className="top-nav">
-          <NavbarBrand tag={Link} className="text-primary" to="/">
-            FitTrax
-          </NavbarBrand>
-          <Nav pills color="primary">
-            <NavItem>
-              <NavLink tag={Link} className="text-primary" to="/">
-                Home
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink tag={Link} className="text-primary" to="/profile">
-                Profile
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink tag={Link} className="text-primary" to="/build">
-                Build
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink tag={Link} className="text-dark" to="/logout">
-                Logout
-              </NavLink>
-            </NavItem>
-          </Nav>
-        </Container>
-      </header>
+      <Container>
+        <NavbarBrand tag={Link} to="/" className="mt-6">
+          <h1>
+            <span className="font-weight-bold">FitTrax</span>
+          </h1>
+        </NavbarBrand>
+        <Nav tabs className="border-bottom box-shadow mb-6">
+          <NavItem>
+            <NavLink tag={Link} to="/">
+              Home
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink tag={Link} to="/profile">
+              Profile
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink tag={Link} to="/build">
+              Build
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink tag={Link} to="/logout">
+              Logout
+            </NavLink>
+          </NavItem>
+        </Nav>
+      </Container>
     )
   }
 }

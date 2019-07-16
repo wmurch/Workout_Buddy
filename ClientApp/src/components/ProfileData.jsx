@@ -10,7 +10,7 @@ import {
   Label
 } from 'reactstrap'
 
-class ProfileData extends Component {
+export class ProfileData extends Component {
   state = {
     workouts: [],
     workout: [],
@@ -26,20 +26,20 @@ class ProfileData extends Component {
   }
 
   createWorkout = async ({ serialized, fields, form }) => {
+    console.log('is this working?')
     return axios
       .post('/api/workout', {
         ...this.state.workout
       })
       .then(resp => {
-        /* this.handleWorkoutSubmit() */
+        this.handleWorkoutSubmit()
         this.setState({
           workouts: this.state.workouts.concat(this.state.workout)
         })
-        debugger
-        window.location.href = '/build'
       })
   }
-  /* handleWorkoutSubmit = () => {
+
+  handleWorkoutSubmit = () => {
     axios
       .get(
         `/api//workout/new?name=${this.state.workout.name}&id=${
@@ -54,7 +54,7 @@ class ProfileData extends Component {
         localStorage.setItem('workout', JSON.stringify(this.state.newWorkout))
         window.location.href = `/build/${this.state.profileId}`
       })
-  } */
+  }
 
   updateWorkoutValue = async e => {
     const state = this.state
@@ -71,13 +71,16 @@ class ProfileData extends Component {
       let idLocalStore = 1
       localStorage.setItem('id', JSON.stringify(idLocalStore))
     }
-    /* localStorage.setItem(
+    localStorage.setItem(
       'id',
       JSON.stringify(this.state.workouts[this.state.workouts.length - 1] + 1)
-    ) */
+    )
     this.setState(state)
   }
   render() {
+    /* const splitted = this.state.workout.name.split('/')
+    const workoutId = splitted[splitted.length - 2]
+    console.log(splitted, workoutId) */
     return (
       <Form onSubmit={this.createWorkout}>
         <FormGroup name="workout">
@@ -102,10 +105,12 @@ class ProfileData extends Component {
               return (
                 <ListGroupItem
                   key={workout.id}
-                  color="primary"
-                  className="justify-content-between text-center"
+                  color="light"
+                  className="justify-content-between text-left text-primary"
+                  tag="a"
+                  href="/workout/{id}"
                 >
-                  <p>{workout.name}</p>
+                  <h2>{workout.name}</h2>
                 </ListGroupItem>
               )
             })}

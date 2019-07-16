@@ -10,6 +10,8 @@ import { Build } from './pages/Build'
 import { Register } from './components/Register'
 import Profile from './pages/Profile'
 import Logout from './components/LogoutData'
+import Workout from './pages/Workout'
+import './components/Layouts.css'
 
 /* import ProtectedRoute from './components/ProtectedRoute' */
 
@@ -26,6 +28,7 @@ export default class App extends Component {
           <Route path="/search" component={Search} />
           <Route path="/profile" component={Profile} />
           <Route path="/logout" component={Logout} />
+          <Route path="/workout/{id}" component={Workout} />
         </Switch>
       </Layout>
     )

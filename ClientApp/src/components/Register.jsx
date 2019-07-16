@@ -1,27 +1,23 @@
 import React, { Component } from 'react'
-import {
-  Button,
-  Form,
-  FormGroup,
-  ListGroup,
-  ListGroupItem,
-  Input,
-  Label
-} from 'reactstrap'
+import { Button, Form, FormGroup, Input, Label } from 'reactstrap'
 import axios from 'axios'
 
 export class Register extends Component {
   state = {
     profile: [],
     profiles: [],
-    isAuthenticated: false
+    isAuthenticated: false,
+    password: '',
+    confirmPassword: '',
+    password_has_error: false
   }
   componentDidMount() {
     axios.get(`/api/profile`).then(resp => {
       this.setState({ profiles: resp.data, isAuthenticated: true })
     })
   }
-  addProfile = async () => {
+  addProfile = async e => {
+    e.preventDefault()
     return axios
       .post('/api/profile', { ...this.state.profile })
       .then(resp => {
@@ -41,18 +37,34 @@ export class Register extends Component {
     localStorage.setItem('profileId', JSON.stringify(idLocalStore))
     console.log(JSON.parse(window.localStorage.getItem('profileId')))
     var input = JSON.parse(window.localStorage.getItem('profileId'))
-    debugger
     if (input) {
       window.location.href = '/profile'
     }
   }
+  checkPassword() {
+    if (
+      !this.state.password ||
+      this.state.password !== this.state.confirmPassword
+    ) {
+      this.setState({ password_has_error: true })
+    } else {
+      this.setState({ password_has_error: false, isAuthenticated: true })
+    }
+  }
+
   updateValue = async e => {
     const state = this.state
     state.profile[e.target.name] = e.target.value
 
     console.log(state.profile[e.target.name])
     this.setState(state)
+    if (e.target.name === 'password' || e.target.name === 'confirmPassword')
+      this.checkPassword()
   }
+  validateForm() {
+    return this.state.email.length > 0 && this.state.password.length > 0
+  }
+
   render() {
     return (
       <Form onSubmit={this.addProfile}>
@@ -76,8 +88,21 @@ export class Register extends Component {
               placeholder="Email"
               onChange={this.updateValue}
             />
+            <Input
+              type="password"
+              name="Password"
+              placeholder="********"
+              onChange={this.updateValue}
+            />
+            <Input
+              type="password"
+              name="confirmPassword"
+              placeholder="********"
+              onChange={this.updateValue}
+            />
+
             <Button type="submit" className="btn-login">
-              submit
+              Submit
             </Button>
           </Label>
         </FormGroup>

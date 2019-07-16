@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { AsyncTypeahead } from 'react-bootstrap-typeahead'
+import {
+  Highlighter,
+  Menu,
+  MenuItem,
+  AsyncTypeahead
+} from 'react-bootstrap-typeahead'
+
 /* import { Form, Field } from 'react-advanced-form' */
 import {
   Col,
@@ -13,30 +19,30 @@ import {
   InputGroup,
   Table
 } from 'reactstrap'
-
+import '../scss/_forms.scss'
 export class BuildData extends Component {
   static displayName = BuildData.name
+
   state = {
     allowNew: false,
     isLoading: false,
     multiple: false,
+    align: 'justify',
     options: [],
     workoutId: '',
     exercise: [],
-    value: '',
-    query: '',
+    suggestion: [],
+    query: [],
     exercises: [],
-    suggestions: [],
-    items: [],
-    selectedExercise: {},
     results: [],
     workouts: [],
     profileWorkout: [],
+    Name: '',
     Sets: '',
     Rep: '',
-    Weight: '',
-    isDirty: false
+    Weight: ''
   }
+  _cache = {}
   componentDidMount = async () => {
     this.getExercises()
   }
@@ -54,7 +60,6 @@ export class BuildData extends Component {
   }
 
   createExercise = async ({ serialized, fields, form }) => {
-    console.log(this.state.exercise)
     return axios
       .post('/api/exercise', {
         ...this.state.exercise
@@ -63,25 +68,65 @@ export class BuildData extends Component {
         this.getExercises()
         this.setState({
           exercise: [],
+          Name: '',
           Sets: '',
-          Rep: '',
-          Weight: '',
-          value: ''
+          Rep: ''
         })
         console.log({ ...this.state.exercises })
       })
   }
-  /*  getExercisesForAutoComplete(e) {
-    axios.get(`/api/search/exercises?=${value}`).then(resp => {
-      callback(resp.data)
+  getExercisesForAutoComplete(e, shownResults) {
+    const { query } = this.state
+    const cachedQuery = this._cache[query]
+    if (
+      cachedQuery.options.length > shownResults ||
+      cachedQuery.options.length === cachedQuery.total_count
+    ) {
+      return
+    }
+
+    this.setState({ isLoading: true })
+    const page = cachedQuery.page + 1
+    axios.get(`/api/search/exercises?=${(query, page)}`).then(resp => {
+      const options = cachedQuery.options.concat(resp.options)
+      this._cache[query] = { ...cachedQuery, options, page }
+      this.setState({
+        isLoading: false,
+        options
+      })
     })
-  } */
+  }
+
+  _handleSearch = query => {
+    if (this._cache[query]) {
+      this.setState({ options: this._cache[query].options })
+      return
+    }
+
+    this.setState({ isLoading: true })
+    axios.get(`/api/search/exercises?=${query}`).then(resp => {
+      this._cache[query] = { ...resp, page: 1 }
+      this.setState({
+        isLoading: false,
+        options: resp.data
+      })
+    })
+  }
+  _handleInputChange = query => {
+    console.log(query)
+    this.setState({ Name: query })
+  }
+  deleteRow = index => {
+    var exercises = [...this.state.exercises]
+    exercises.splice(index, 1)
+    this.setState({ exercises })
+  }
   updateExerciseValue = async e => {
     var id = JSON.parse(window.localStorage.getItem('id'))
-    console.log(id)
     const state = this.state
+    console.log(e.target)
+    state.exercise.name = this.state.Name
     state.exercise.workoutId = id
-    state.exercise.name = this.state.selectedExercise.name
     state.exercise[e.target.name] = e.target.value
     state[e.target.name] = e.target.value
     console.log(state)
@@ -90,36 +135,68 @@ export class BuildData extends Component {
   resetForm = () => {
     window.location.href = '/profile'
   }
+  renderMenu = (option, menuProps) => {
+    const exTemplate = (
+      <MenuItem option={option.name} position={option.id}>
+        <Highlighter search={menuProps.text}>{option.name}</Highlighter>
+      </MenuItem>
+    )
+
+    return <Menu {...menuProps}>{exTemplate}</Menu>
+  }
+
+  _renderMenuItemChildren = (option, props, index) => {
+    return [
+      <Highlighter key="name" search={props.text}>
+        {option.name}
+      </Highlighter>,
+      <div key="population">
+        <small>Exercise: {option.name}</small>
+      </div>
+    ]
+  }
 
   render() {
     const workoutName = JSON.parse(window.localStorage.getItem('workout'))
+    const { align } = this.state
     return (
       <div>
-        <Form onSubmit={this.createExercise}>
-          <FormGroup className="autoComplete">
-            <Row form>
-              <InputGroup>
-                <Col md={6}>
-                  <h1>Welcome to the {workoutName} Page</h1>
+        <Form onSubmit={this.createExercise} className="mt-3">
+          <FormGroup>
+            <InputGroup>
+              <Row form>
+                <h2 className="mt-3">
+                  Welcome to the{' '}
+                  <span className="font-weight-bold">{workoutName}</span> Page
+                </h2>
+                <Col xs={6} className="mt-3">
                   <Label>
                     Exercise
-                    {/* <AsyncTypeahead
+                    <AsyncTypeahead
                       {...this.state}
+                      id="Exercise"
+                      align={align}
+                      selectHintOnEnter={true}
+                      allowNew={true}
                       bsSize="sm"
-                      labelKey="loginexercise"
+                      labelKey={'name'}
                       minLength={3}
+                      options={this.state.options}
+                      isLoading={this.state.isLoading}
+                      onPaginate={this._handlePagination}
                       onSearch={this._handleSearch}
+                      onInputChange={this._handleInputChange}
+                      useCache={true}
                       placeholder="Enter your exercise..."
-                    /> */}
+                    />
                   </Label>
                 </Col>
-                <Col xs={2}>
+                <Col xs={2} className="mt-3">
                   <Label>
                     Sets
                     <Input
                       bsSize="sm"
                       value={this.state.Sets}
-                      className=".col-large-*"
                       type="number"
                       label="Sets"
                       name="Sets"
@@ -127,7 +204,7 @@ export class BuildData extends Component {
                     />
                   </Label>
                 </Col>
-                <Col xs={2}>
+                <Col xs={2} className="mt-3">
                   <Label>
                     Reps
                     <Input
@@ -140,8 +217,8 @@ export class BuildData extends Component {
                     />
                   </Label>
                 </Col>
-              </InputGroup>
-            </Row>
+              </Row>
+            </InputGroup>
           </FormGroup>
           <FormGroup className="woInput" />
           <FormGroup name="table">
@@ -160,6 +237,9 @@ export class BuildData extends Component {
                       <td>{exercise.name}</td>
                       <td>{exercise.sets}</td>
                       <td>{exercise.rep}</td>
+                      <td>
+                        <Button onClick={i => this.deleteRow(i)} />X
+                      </td>
                     </tr>
                   )
                 })}
@@ -171,6 +251,7 @@ export class BuildData extends Component {
               Add Exercise
             </Button>
             <Button
+              size="lg"
               as="input"
               type="reset"
               value="reset"
