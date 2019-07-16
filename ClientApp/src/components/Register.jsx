@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 export class Register extends Component {
   state = {
@@ -21,25 +22,19 @@ export class Register extends Component {
     return axios
       .post('/api/profile', { ...this.state.profile })
       .then(resp => {
-        this.getProfileId()
-        this.setState({
-          profile: this.state.profile
-        })
+        this.setState(
+          {
+            profile: this.state.profile
+          },
+          () => {
+            localStorage.setItem('profileId', JSON.stringify(resp.data.id))
+            window.location.href = '/profile'
+          }
+        )
       })
       .catch(err => {
         console.log(err)
       })
-  }
-  getProfileId = async () => {
-    let idLocalLength = this.state.profiles.length
-    let idLocalStore = this.state.profiles[idLocalLength - 1].id + 1
-    localStorage.setItem('auth', JSON.stringify(this.state.isAuthenticated))
-    localStorage.setItem('profileId', JSON.stringify(idLocalStore))
-    console.log(JSON.parse(window.localStorage.getItem('profileId')))
-    var input = JSON.parse(window.localStorage.getItem('profileId'))
-    if (input) {
-      window.location.href = '/profile'
-    }
   }
   checkPassword() {
     if (
@@ -55,9 +50,12 @@ export class Register extends Component {
   updateValue = async e => {
     const state = this.state
     state.profile[e.target.name] = e.target.value
-
     console.log(state.profile[e.target.name])
     this.setState(state)
+    localStorage.setItem(
+      'profile',
+      JSON.stringify(this.state.profile.firstName)
+    )
     if (e.target.name === 'password' || e.target.name === 'confirmPassword')
       this.checkPassword()
   }
@@ -100,7 +98,6 @@ export class Register extends Component {
               placeholder="********"
               onChange={this.updateValue}
             />
-
             <Button type="submit" className="btn-login">
               Submit
             </Button>

@@ -1,30 +1,15 @@
 import React, { Component } from 'react'
 import { Nav, NavItem, NavLink, NavbarBrand, Container } from 'reactstrap'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
-export class NavMenu extends Component {
-  constructor(props) {
-    super(props)
-
-    this.toggle = this.toggle.bind(this)
-    this.state = {
-      dropdownOpen: false
-    }
-  }
-
-  toggle() {
-    this.setState({
-      dropdownOpen: !this.state.dropdownOpen
-    })
-  }
-
+class NavMenu extends Component {
   render() {
     return (
-      <Container>
+      <Container color="#2f518d">
         <NavbarBrand tag={Link} to="/" className="mt-6">
-          <h1>
+          <h5>
             <span className="font-weight-bold">FitTrax</span>
-          </h1>
+          </h5>
         </NavbarBrand>
         <Nav tabs className="border-bottom box-shadow mb-6">
           <NavItem>
@@ -52,3 +37,4 @@ export class NavMenu extends Component {
     )
   }
 }
+export default withRouter(NavMenu)

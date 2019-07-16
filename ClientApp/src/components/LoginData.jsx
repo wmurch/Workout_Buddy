@@ -10,8 +10,14 @@ export class LoginData extends Component {
     profile: [],
     isAuthenticated: false
   }
+  async componentDidMount() {
+    await axios
+      .get(`/api/profile/login?email=${this.state.profile.email}`)
+      .then(resp => {
+        this.setState({ profile: resp.data, isAuthenticated: true })
+      })
+  }
   getProfile = async e => {
-    e.preventDefault()
     console.log(this.state.profile.email)
     return axios
       .get(`/api/profile/login?email=${this.state.profile.email}`)
@@ -24,8 +30,10 @@ export class LoginData extends Component {
           'profileId',
           JSON.stringify(this.state.profile[0].id)
         )
+        localStorage.setItem('profile', JSON.stringify(this.state.profile))
 
         window.location.href = '/profile'
+        /* this.props.history.push('/profile') */
       })
   }
   updateValue = async e => {
@@ -58,10 +66,12 @@ export class LoginData extends Component {
             </Label>
           </FormGroup>
           <FormText color="muted">
-            If you do not have an account please register here:
-            <Link to="/register">
-              <span className="font-weight-bolder">Register</span>{' '}
-            </Link>
+            <h3>
+              If you do not have an account please
+              <Link to="/register">
+                <span className="font-weight-bolder"> Register</span>{' '}
+              </Link>
+            </h3>
           </FormText>
           <Button type="submit" className="btn btn-primary">
             submit

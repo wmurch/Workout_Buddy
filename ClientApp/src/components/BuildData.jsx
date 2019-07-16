@@ -43,24 +43,15 @@ export class BuildData extends Component {
     Weight: ''
   }
   _cache = {}
-  componentDidMount = async () => {
+  /* componentDidMount = async () => {
     this.getExercises()
-  }
+  } */
 
-  getExercises = async () => {
-    const searchId = JSON.parse(window.localStorage.getItem('id'))
-    if (!isNaN(parseInt(searchId))) {
-      await axios.get(`/api/exercise/workout/${searchId}`).then(data => {
-        if (data.status === 200) {
-          this.setState({ exercises: data.data })
-        }
-      })
-      console.log(this.state.exercises)
-    }
-  }
-
-  createExercise = async ({ serialized, fields, form }) => {
-    return axios
+  createExercise = event => {
+    console.log({ event })
+    event.preventDefault()
+    console.log(this.state.exercise)
+    axios
       .post('/api/exercise', {
         ...this.state.exercise
       })
@@ -74,6 +65,17 @@ export class BuildData extends Component {
         })
         console.log({ ...this.state.exercises })
       })
+  }
+  getExercises = async () => {
+    const searchId = JSON.parse(window.localStorage.getItem('id'))
+    if (!isNaN(parseInt(searchId))) {
+      await axios.get(`/api/exercise/workout/${searchId}`).then(data => {
+        if (data.status === 200) {
+          this.setState({ exercises: data.data })
+        }
+      })
+      console.log(this.state.exercises)
+    }
   }
   getExercisesForAutoComplete(e, shownResults) {
     const { query } = this.state
@@ -124,7 +126,6 @@ export class BuildData extends Component {
   updateExerciseValue = async e => {
     var id = JSON.parse(window.localStorage.getItem('id'))
     const state = this.state
-    console.log(e.target)
     state.exercise.name = this.state.Name
     state.exercise.workoutId = id
     state.exercise[e.target.name] = e.target.value
@@ -161,14 +162,13 @@ export class BuildData extends Component {
     const { align } = this.state
     return (
       <div>
-        <Form onSubmit={this.createExercise} className="mt-3">
+        <Form onSubmit={e => this.createExercise(e)} className="mt-12">
+          <h2 className="mt-3">
+            <span className="font-weight-bold">{workoutName}</span>
+          </h2>
           <FormGroup>
             <InputGroup>
               <Row form>
-                <h2 className="mt-3">
-                  Welcome to the{' '}
-                  <span className="font-weight-bold">{workoutName}</span> Page
-                </h2>
                 <Col xs={6} className="mt-3">
                   <Label>
                     Exercise
@@ -187,11 +187,11 @@ export class BuildData extends Component {
                       onSearch={this._handleSearch}
                       onInputChange={this._handleInputChange}
                       useCache={true}
-                      placeholder="Enter your exercise..."
+                      placeholder="Enter exercise..."
                     />
                   </Label>
                 </Col>
-                <Col xs={2} className="mt-3">
+                <Col xs={3} className="mt-3">
                   <Label>
                     Sets
                     <Input
@@ -204,7 +204,7 @@ export class BuildData extends Component {
                     />
                   </Label>
                 </Col>
-                <Col xs={2} className="mt-3">
+                <Col xs={3} className="mt-3">
                   <Label>
                     Reps
                     <Input
@@ -216,6 +216,9 @@ export class BuildData extends Component {
                       onChange={this.updateExerciseValue}
                     />
                   </Label>
+                  <Button variant="primary" type="submit" size="sm">
+                    Add Exercise
+                  </Button>
                 </Col>
               </Row>
             </InputGroup>
@@ -247,9 +250,6 @@ export class BuildData extends Component {
             </Table>
           </FormGroup>
           <FormGroup>
-            <Button variant="primary" type="submit" size="lg">
-              Add Exercise
-            </Button>
             <Button
               size="lg"
               as="input"

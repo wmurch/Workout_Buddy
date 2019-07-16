@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Media } from 'reactstrap'
-import { LoginData } from '../components/LoginData'
+import { Login } from './Login'
 import Logo from '../images/fittrax.jpg'
 import './Home.css'
 
@@ -10,17 +10,21 @@ export class Home extends Component {
     return (
       <div>
         <Media className="home-header">
-          <Media object src={Logo} alt="Generic placeholder image" />
-
           <Media body>
             <Media heading>
-              Welcome to <span className="font-weight-bold">FitTrax</span>
+              <Media object src={Logo} alt="Generic placeholder image" />
             </Media>
-            Welcome to the FitTrax App. This app was designed to help you track
-            your workouts on mobile or while traveling.
+            <h2>
+              <span className="font-weight-bold">FitTrax</span>
+            </h2>
+
+            <h3>
+              Welcome. This app was designed to help you track your workouts on
+              mobile or while traveling.
+            </h3>
           </Media>
         </Media>
-        <LoginData />
+        <Login />
       </div>
     )
   }

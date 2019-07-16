@@ -5,7 +5,7 @@ import { Route } from 'react-router'
 import { Layout } from './components/Layout'
 import { Home } from './pages/Home.jsx'
 import { Search } from './pages/Search'
-import Login from './pages/Login'
+import { Login } from './pages/Login'
 import { Build } from './pages/Build'
 import { Register } from './components/Register'
 import Profile from './pages/Profile'
@@ -29,7 +29,7 @@ export default class App extends Component {
           <Route path="/search" component={Search} />
           <Route path="/profile" component={Profile} />
           <Route path="/logout" component={Logout} />
-          <Route path="/workout/{id}" component={Workout} />
+          <Route path="/workout/" component={Workout} />
         </Switch>
       </Layout>
     )

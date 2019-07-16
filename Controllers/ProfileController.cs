@@ -29,6 +29,18 @@ namespace Workout_Buddy.Controllers
         }
 
         // GET: api/Profile/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Workout>> GetWorkout(int id)
+        {
+            var profile = await _context.Workouts.FindAsync(id);
+
+            if (profile == null)
+            {
+                return NotFound();
+            }
+
+            return profile;
+        }
         [HttpGet("login")]
         public async Task<ActionResult<IEnumerable<Profile>>> GetProfileID([FromQuery] string email)
         {
