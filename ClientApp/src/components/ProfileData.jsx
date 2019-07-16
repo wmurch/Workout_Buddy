@@ -40,6 +40,7 @@ export class ProfileData extends Component {
   }
 
   handleWorkoutSubmit = () => {
+    console.log('this is handle')
     axios
       .get(
         `/api//workout/new?name=${this.state.workout.name}&id=${
@@ -64,17 +65,10 @@ export class ProfileData extends Component {
     state.workout[e.target.name] = e.target.value
     localStorage.setItem('workout', JSON.stringify(e.target.value))
     let idLocalLength = this.state.workouts.length
-    if (idLocalLength) {
-      let idLocalStore = this.state.workouts[idLocalLength - 1].id + 1
-      localStorage.setItem('id', JSON.stringify(idLocalStore))
-    } else {
-      let idLocalStore = 1
-      localStorage.setItem('id', JSON.stringify(idLocalStore))
-    }
-    localStorage.setItem(
-      'id',
-      JSON.stringify(this.state.workouts[this.state.workouts.length - 1] + 1)
-    )
+
+    let idLocalStore = this.state.workouts[idLocalLength - 1].id + 1
+    localStorage.setItem('id', JSON.stringify(idLocalStore))
+    console.log('starting normal')
     this.setState(state)
   }
   render() {

@@ -12,6 +12,7 @@ import Profile from './pages/Profile'
 import Logout from './components/LogoutData'
 import Workout from './pages/Workout'
 import './components/Layouts.css'
+/* import './assets/scss/material-kit-react.scss' */
 
 /* import ProtectedRoute from './components/ProtectedRoute' */
 
