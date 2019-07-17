@@ -101,7 +101,7 @@ export class ProfileData extends Component {
               <Button as="input" type="submit" value="Submit" size="sm">
                 Create New Workout
               </Button>
-              <Button
+              {/* <Button
                 as="input"
                 type="submit"
                 value="Submit"
@@ -109,7 +109,7 @@ export class ProfileData extends Component {
                 onSubmit={this.handleWorkoutSubmit}
               >
                 Test
-              </Button>
+              </Button> */}
             </Label>
           </FormGroup>
           <FormGroup name="table">
