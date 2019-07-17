@@ -20,6 +20,7 @@ import {
   Table
 } from 'reactstrap'
 import '../scss/_forms.scss'
+
 export class BuildData extends Component {
   static displayName = BuildData.name
 
@@ -36,16 +37,14 @@ export class BuildData extends Component {
     exercises: [],
     results: [],
     workouts: [],
-    profileWorkout: [],
+    selected: [],
+    index: [],
     Name: '',
     Sets: '',
     Rep: '',
     Weight: ''
   }
   _cache = {}
-  /* componentDidMount = async () => {
-    this.getExercises()
-  } */
 
   createExercise = event => {
     console.log({ event })
@@ -136,30 +135,29 @@ export class BuildData extends Component {
   resetForm = () => {
     window.location.href = '/profile'
   }
-  renderMenu = (option, menuProps) => {
-    const exTemplate = (
-      <MenuItem option={option.name} position={option.id}>
-        <Highlighter search={menuProps.text}>{option.name}</Highlighter>
-      </MenuItem>
-    )
+  // renderMenu = (option, menuProps) => {
+  //   const exTemplate = (
+  //     <MenuItem option={option.name} position={option.id}>
+  //       <Highlighter search={menuProps.text}>{option.name}</Highlighter>
+  //     </MenuItem>
+  //   )
 
-    return <Menu {...menuProps}>{exTemplate}</Menu>
-  }
+  //   return <Menu {...menuProps}>{exTemplate}</Menu>
+  // }
 
-  _renderMenuItemChildren = (option, props, index) => {
-    return [
-      <Highlighter key="name" search={props.text}>
-        {option.name}
-      </Highlighter>,
-      <div key="population">
-        <small>Exercise: {option.name}</small>
-      </div>
-    ]
-  }
+  // _renderMenuItemChildren = (option, props, index) => {
+  //   return [
+  //     <Highlighter key="name" search={props.text}>
+  //       {option.name}
+  //     </Highlighter>,
+  //     <div key="population">
+  //       <small>Exercise: {option.name}</small>
+  //     </div>
+  //   ]
+  // }
 
   render() {
     const workoutName = JSON.parse(window.localStorage.getItem('workout'))
-    const { align } = this.state
     return (
       <div>
         <Form onSubmit={e => this.createExercise(e)} className="mt-12">
@@ -175,8 +173,8 @@ export class BuildData extends Component {
                     <AsyncTypeahead
                       {...this.state}
                       id="Exercise"
-                      align={align}
-                      selectHintOnEnter={true}
+                      /* align={align} */
+                      /* selected={this.state.Name} */
                       allowNew={true}
                       bsSize="sm"
                       labelKey={'name'}

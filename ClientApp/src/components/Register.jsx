@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
 
 export class Register extends Component {
   state = {
