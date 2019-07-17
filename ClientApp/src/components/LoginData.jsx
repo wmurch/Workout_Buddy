@@ -18,8 +18,8 @@ export class LoginData extends Component {
       })
   }
   getProfile = async e => {
-    console.log(this.state.profile.email)
-    return axios
+    e.preventDefault()
+    await axios
       .get(`/api/profile/login?email=${this.state.profile.email}`)
       .then(resp => {
         this.setState({ profile: resp.data, isAuthenticated: true })

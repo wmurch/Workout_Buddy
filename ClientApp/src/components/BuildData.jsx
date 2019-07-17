@@ -19,7 +19,6 @@ import {
   InputGroup,
   Table
 } from 'reactstrap'
-import '../scss/_forms.scss'
 
 export class BuildData extends Component {
   static displayName = BuildData.name
