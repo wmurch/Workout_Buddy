@@ -45,11 +45,9 @@ export class BuildData extends Component {
   }
   _cache = {}
 
-  createExercise = event => {
-    console.log({ event })
+  createExercise = async event => {
     event.preventDefault()
-    console.log(this.state.exercise)
-    axios
+    await axios
       .post('/api/exercise', {
         ...this.state.exercise
       })
@@ -98,14 +96,14 @@ export class BuildData extends Component {
     })
   }
 
-  _handleSearch = query => {
+  _handleSearch = async query => {
     if (this._cache[query]) {
       this.setState({ options: this._cache[query].options })
       return
     }
 
     this.setState({ isLoading: true })
-    axios.get(`/api/search/exercises?=${query}`).then(resp => {
+    await axios.get(`/api/search/exercises?=${query}`).then(resp => {
       this._cache[query] = { ...resp, page: 1 }
       this.setState({
         isLoading: false,
