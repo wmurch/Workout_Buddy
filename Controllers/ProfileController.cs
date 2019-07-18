@@ -30,9 +30,9 @@ namespace Workout_Buddy.Controllers
 
         // GET: api/Profile/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Workout>> GetWorkout(int id)
+        public async Task<ActionResult<Profile>> GetWorkout(int id)
         {
-            var profile = await _context.Workouts.FindAsync(id);
+            var profile = await _context.Profiles.FindAsync(id);
 
             if (profile == null)
             {

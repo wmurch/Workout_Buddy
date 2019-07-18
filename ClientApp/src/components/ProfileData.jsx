@@ -42,7 +42,7 @@ export class ProfileData extends Component {
         ...this.state.workout
       })
       .then(resp => {
-        this.handleWorkoutSubmit()
+        /* this.handleWorkoutSubmit() */
         this.setState(
           {
             workouts: this.state.workouts.concat(this.state.workout)

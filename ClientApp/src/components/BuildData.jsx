@@ -76,7 +76,7 @@ export class BuildData extends Component {
       console.log(this.state.exercises)
     }
   }
-  getExercisesForAutoComplete(e, shownResults) {
+  getExercisesForAutoComplete = async (e, shownResults) => {
     const { query } = this.state
     const cachedQuery = this._cache[query]
     if (
@@ -88,7 +88,7 @@ export class BuildData extends Component {
 
     this.setState({ isLoading: true })
     const page = cachedQuery.page + 1
-    axios.get(`/api/search/exercises?=${(query, page)}`).then(resp => {
+    await axios.get(`/api/search/exercises?=${(query, page)}`).then(resp => {
       const options = cachedQuery.options.concat(resp.options)
       this._cache[query] = { ...cachedQuery, options, page }
       this.setState({
@@ -125,6 +125,7 @@ export class BuildData extends Component {
   updateExerciseValue = async e => {
     var id = JSON.parse(window.localStorage.getItem('id'))
     const state = this.state
+    console.log(this.state.selected[0].name)
     state.exercise.name = this.state.selected[0].name
     state.exercise.workoutId = id
     state.exercise[e.target.name] = e.target.value
