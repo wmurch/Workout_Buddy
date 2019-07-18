@@ -69,6 +69,7 @@ export class BuildData extends Component {
     if (!isNaN(parseInt(searchId))) {
       await axios.get(`/api/exercise/workout/${searchId}`).then(data => {
         if (data.status === 200) {
+          console.log(data)
           this.setState({ exercises: data.data })
         }
       })
@@ -112,9 +113,9 @@ export class BuildData extends Component {
       })
     })
   }
-  _handleInputChange = query => {
-    console.log(query)
-    this.setState({ Name: query })
+  _handleInputChange = selected => {
+    console.log(selected)
+    this.setState({ selected })
   }
   deleteRow = index => {
     var exercises = [...this.state.exercises]
@@ -124,7 +125,7 @@ export class BuildData extends Component {
   updateExerciseValue = async e => {
     var id = JSON.parse(window.localStorage.getItem('id'))
     const state = this.state
-    state.exercise.name = this.state.Name
+    state.exercise.name = this.state.selected[0].name
     state.exercise.workoutId = id
     state.exercise[e.target.name] = e.target.value
     state[e.target.name] = e.target.value
@@ -178,11 +179,12 @@ export class BuildData extends Component {
                       bsSize="sm"
                       labelKey={'name'}
                       minLength={3}
+                      selected={this.state.selected}
                       options={this.state.options}
                       isLoading={this.state.isLoading}
                       onPaginate={this._handlePagination}
                       onSearch={this._handleSearch}
-                      onInputChange={this._handleInputChange}
+                      onChange={this._handleInputChange}
                       useCache={true}
                       placeholder="Enter exercise..."
                     />
@@ -238,7 +240,7 @@ export class BuildData extends Component {
                       <td>{exercise.sets}</td>
                       <td>{exercise.rep}</td>
                       <td>
-                        <Button onClick={i => this.deleteRow(i)} />X
+                        <Button onClick={i => this.deleteRow(i)}>X</Button>
                       </td>
                     </tr>
                   )
